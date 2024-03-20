@@ -32,12 +32,13 @@
 #define TELE_ROOT               "/Telemetria"
 #define ANTICOLISION_ROOT       "/Anticolision"
 #define ACARREO_ROOT            "/Acarreo"
-
+#define PASAJEROS_ROOT          "/Pasajeros"
 
 #define TELE                    "Telemetria"
 #define SF                      "SF"
 #define ANTICOLISION            "Anticolision"
 #define ACARREO                 "Acarreo"
+#define PASAJEROS               "Pasajeros"
 
 char id_count[4];
 char id_count_collision[2];
@@ -82,7 +83,7 @@ void write_data_collision(char* TGT_DIR,const char* filename,wiced_filesystem_t*
 
 int dir_verify( char* dir_to_file_create,wiced_filesystem_t* fs_handle, const char* dir_name, char* date );
 
-
+void write_passenger(char* TGT_DIR, const char* filename, struct Passenger *dataP,wiced_filesystem_t* fs_handle);
 
 void init_sd(wiced_filesystem_t* fs_handle){
     wiced_result_t result;
@@ -261,6 +262,32 @@ void write_data(char* TGT_DIR,const char* filename,struct location_data dataX,wi
 
 }
 
+void write_passenger(char* TGT_DIR, const char* filename, struct Passenger *passenger,wiced_filesystem_t* fs_handle)
+{
+    wiced_dir_t dir;
+    wiced_file_t f_src;
+    uint64_t write_count = 1;
+    char g_date[15];
+
+    sprintf(g_date,"%s.txt",filename);
+
+    wiced_filesystem_dir_open( fs_handle, &dir, TGT_DIR );
+    if(WICED_SUCCESS != wiced_filesystem_file_open( fs_handle, &f_src, g_date, WICED_FILESYSTEM_OPEN_FOR_WRITE))
+    {
+        printf( "Error opening target file %s\n",g_date);
+    }
+    else
+    {
+        printf("\n Texto %s, numero de byts a escribir %d \n",data_to_json_passenger(passenger),strlen(data_to_json_passenger(passenger)));
+        if(WICED_SUCCESS == wiced_filesystem_file_write( &f_src, (const char *)data_to_json_passenger(passenger),strlen(data_to_json_passenger(passenger)), &write_count ))
+        {
+            printf("\n Text insert succedul \n");
+        }
+        //free(res1);
+    }
+    wiced_filesystem_file_close( &f_src );
+    wiced_filesystem_dir_close(&dir);
+}
 
 void write_data_acarreo(char* TGT_DIR,const char* filename,struct Acarreos *dataX,char * Vehi_Rep,wiced_filesystem_t* fs_handle){
     wiced_result_t result;

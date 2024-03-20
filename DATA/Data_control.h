@@ -94,8 +94,8 @@ struct tempo_collision{
 #define ID_acarreo  "CAR#"
 #define _MSG_TEST   "CAR#11:00:33:44:55:66|4\0"
 #define _MSG_TEST2  "BNM|BC:57:29:00:2E:DB,GEOSF,-95,0"
-#define _N_KDV      "KDV"
-#define _NONE       "NONE"
+#define _Passenger_in   "PCM"
+#define _Passenger_out  "PCO"
 
 static char _split_tama_1[] ="#";
 static char _split_tama_2 []="|";
@@ -108,152 +108,122 @@ typedef enum {
     BC4
 } _BEACON;
 
-struct Acarreos
+struct Passenger
 {
-    char    mac_bt[19];
-    int     type;
+    char    mac_bt[19];  /* Passenger Mac */
+    int     Pass_number;  /* passenger number */
     unsigned char time_start[12];
     unsigned char date[12];
-    unsigned char name[18];
-    unsigned char id[3];
-
+    uint8_t caso;
 };
+struct Passenger passenger[4];
+
+//struct Acarreos
+//{
+//    char    mac_bt[19];
+//    int     type;
+//    unsigned char time_start[12];
+//    unsigned char date[12];
+//    unsigned char name[18];
+//    unsigned char id[3];
+//
+//};
 
 //char mac_bt_D[19]; /* Variable used in the driver identificator */
-void tamagochi(char *input,struct Acarreos *acareo){
-    int x=0;
-    unsigned char str_split[128];
-    memset(str_split,'\0',128);
-
-    if(strstr(input,ID_acarreo)&&(strlen(acareo->mac_bt)==0)){
-        strcpy(acareo->time_start,time_get(&i2c_rtc));
-        strcpy(acareo->date,date_get_log(&i2c_rtc));
-
-        memcpy(str_split,input,strlen(input));
-
-        char * frist_split;
-
-        frist_split=strtok(str_split,_split_tama_1);
-        frist_split=strtok(NULL,_split_tama_1);
-
-//         printf("<<%s\n",frist_split);
-
-        char *second_split;
-
-        second_split=strtok(frist_split,_split_tama_2);
-//         printf("<<%s\n",second_split);
-
-        while(second_split!=NULL){
-            switch (x)
-            {
-            case 0:
-                /* code */
-//                         printf("mmmm%s\n",second_split);
-
-                memcpy(acareo->mac_bt,second_split,strlen(second_split));
-                acareo->mac_bt[strlen(second_split)]='\0';
-                break;
-            case 1:
-                /* code */
-                acareo->type=atoi(second_split);
-//                switch(acareo->type){
-//                case 1:
+//void tamagochi(char *input,struct Acarreos *acareo){
+//    int x=0;
+//    unsigned char str_split[128];
+//    memset(str_split,'\0',128);
 //
-//                    break;
-//                }
-                break;
-            case 2:
-                /* code */
-//                _flag_aca=WICED_TRUE;
+//    if(strstr(input,ID_acarreo)&&(strlen(acareo->mac_bt)==0)){
+//        strcpy(acareo->time_start,time_get(&i2c_rtc));
+//        strcpy(acareo->date,date_get_log(&i2c_rtc));
+//
+//        memcpy(str_split,input,strlen(input));
+//
+//        char * frist_split;
+//
+//        frist_split=strtok(str_split,_split_tama_1);
+//        frist_split=strtok(NULL,_split_tama_1);
+//
+////         printf("<<%s\n",frist_split);
+//
+//        char *second_split;
+//
+//        second_split=strtok(frist_split,_split_tama_2);
+////         printf("<<%s\n",second_split);
+//
+//        while(second_split!=NULL){
+//            switch (x)
+//            {
+//            case 0:
+//                /* code */
+//                         printf("mmmm%s\n",second_split);
+//
+//                memcpy(acareo->mac_bt,second_split,strlen(second_split));
+//                acareo->mac_bt[strlen(second_split)]='\0';
+//                break;
+//            case 1:
+//                /* code */
 //                acareo->type=atoi(second_split);
+////                switch(acareo->type){
+////                case 1:
+////
+////                    break;
+////                }
+//                break;
+//            case 2:
+//                /* code */
+////                _flag_aca=WICED_TRUE;
+////                acareo->type=atoi(second_split);
+////                memcpy(acareo->name,second_split,strlen(second_split));
+////                acareo->name[strlen(second_split)]='\0';
+//                break;
+//            default:
+//                break;
+//            }
+//            x++;
+//            second_split=strtok(NULL,_split_tama_2);
+//        }
+//
+//    }
+//    else if(strstr(input,ID_name_beacon)){
+//
+//        memcpy(str_split,input,strlen(input));
+//
+//        char * frist_split;
+//
+//        frist_split=strtok(str_split,_split_tama_1);
+//        frist_split=strtok(NULL,_split_tama_1);
+//
+//         printf("<<%s\n",frist_split);
+//
+//        char *second_split;
+//
+//        second_split=strtok(frist_split,_split_tama_2);
+//         printf("<<%s\n",second_split);
+//
+//        while(second_split!=NULL){
+//            switch (x)
+//            {
+//            case 0:
+//                /* code */
+//                _flag_aca=WICED_TRUE;
 //                memcpy(acareo->name,second_split,strlen(second_split));
 //                acareo->name[strlen(second_split)]='\0';
-                break;
-            default:
-                break;
-            }
-            x++;
-            second_split=strtok(NULL,_split_tama_2);
-        }
-
-    }
-    else if(strstr(input,ID_name_beacon)){
-
-        memcpy(str_split,input,strlen(input));
-
-        char * frist_split;
-
-        frist_split=strtok(str_split,_split_tama_1);
-        frist_split=strtok(NULL,_split_tama_1);
-
-         printf("<<%s\n",frist_split);
-
-        char *second_split;
-
-        second_split=strtok(frist_split,_split_tama_2);
-         printf("<<%s\n",second_split);
-
-        while(second_split!=NULL){
-            switch (x)
-            {
-            case 0:
-                /* code */
-                _flag_aca=WICED_TRUE;
-                memcpy(acareo->name,second_split,strlen(second_split));
-                acareo->name[strlen(second_split)]='\0';
-                printf("%s",acareo->name);
-                break;
-            default:
-                break;
-            }
-            x++;
-            second_split=strtok(NULL,_split_tama_2);
-        }
-
-    }
-//    else if(strstr(input,_N_KDV))
-//        {
-//            memcpy(str_split,input,strlen(input));
-//            //printf("\n Copio %s\n",str_split);
-//
-//            char * first_split;
-//
-//            first_split=strtok(str_split,_split_tama_2);
-//
-//            while(first_split !=NULL)
-//            {
-//                switch(x)
-//                {
-//                case 0:
-//                    /* No hago nada */
-//                    break;
-//                case 1:
-//                    if(strstr(input ,_NONE))
-//                    {
-//                        memset(mac_bt_D,'\0',strlen(mac_bt_D));
-//                    }
-//                    else
-//                    {
-//                        memset(mac_bt_D,'\0',strlen(mac_bt_D));
-//                        //memcpy(mac_bt_D, first_split,strlen(first_split));
-//                        memcpy(mac_bt_D, first_split,strlen(first_split));
-//                        mac_bt_D[strlen(first_split)]='\0';
-//                        printf("\n %s \n",mac_bt_D);
-//                    }
-//
-//                    break;
-//                    default:
-//                        break;
-//                }
-//                first_split = strtok(NULL,_split_tama_2);
-//                x++;
+//                printf("%s",acareo->name);
+//                break;
+//            default:
+//                break;
 //            }
+//            x++;
+//            second_split=strtok(NULL,_split_tama_2);
+//        }
 //
-//                _flag_driver = WICED_TRUE;
-//          }
-    wiced_rtos_set_semaphore(&displaySemaphore);
-
-}
+//    }
+//    wiced_rtos_set_semaphore(&displaySemaphore);
+//
+//}
 
 void split_reader(unsigned char* buffer_in){
     unsigned char str_split2[128];
@@ -426,6 +396,21 @@ char* data_to_json(struct location_data *data  ){
     return res;
 }
 
+char* data_to_json_passenger(struct Passenger *passenger ){
+    char* res1;
+    res1=malloc(sizeof(char)*200);
+    if(passenger[0].caso == 1)
+    {
+        sprintf(res1,"{\"PassengerIn Number\":\"%d\",\"MacPassenger\":\"%s\",\"EnterTime\":\"%s-%s\"}\n",passenger[0].Pass_number,passenger[0].mac_bt,passenger[0].date,passenger[0].time_start);
+    }
+    else
+    {
+        sprintf(res1,"{\"PassengerOUT Number\":\"%d\",\"MacPassenger\":\"%s\",\"OutTime\":\"%s-%s\"}\n",passenger[0].Pass_number,passenger[0].mac_bt,passenger[0].date,passenger[0].time_start);
+    }
+    return res1;
+
+    //"{\"EventId\":\"%s\",\"EventDate\":\"%s-%s\",\"MACBeacon\":\"%s\",\"MACOperator\":\"\",\"MACVehicle\":\"%s\",\"Status\":%d}\n"
+}
 
 char* data_to_json_collision(struct colliosn_mac_t *data  ,struct tempo_collision * main,char * date,char * Vehi_Rep){
     char* res;
@@ -468,16 +453,16 @@ char* data_to_json_collision(struct colliosn_mac_t *data  ,struct tempo_collisio
 }
 
 
-char* data_to_json_acarreo(struct Acarreos * main,char * Vehi_Rep){
-    char* res;
-    res=malloc(sizeof(char)*200);
-
-    sprintf(res,
-              "{\"EventId\":\"%s\",\"EventDate\":\"%s-%s\",\"MACBeacon\":\"%s\",\"MACOperator\":\"\",\"MACVehicle\":\"%s\",\"Status\":%d}\n"
-              ,main->id,main->date,main->time_start,main->mac_bt,Vehi_Rep,main->type);
-
-    return res;
-}
+//char* data_to_json_acarreo(struct Acarreos * main,char * Vehi_Rep){
+//    char* res;
+//    res=malloc(sizeof(char)*200);
+//
+//    sprintf(res,
+//              "{\"EventId\":\"%s\",\"EventDate\":\"%s-%s\",\"MACBeacon\":\"%s\",\"MACOperator\":\"\",\"MACVehicle\":\"%s\",\"Status\":%d}\n"
+//              ,main->id,main->date,main->time_start,main->mac_bt,Vehi_Rep,main->type);
+//
+//    return res;
+//}
 
 
 

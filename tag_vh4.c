@@ -132,7 +132,8 @@ void application_start( ){
 //    date_set("20/12/25",&i2c_rtc);
 //     time_set("11:80:00",&i2c_rtc);
 
-    wiced_rtos_create_thread(&displayThreadHandle, THREAD_BASE_PRIORITY+4, NULL, displayThread, THREAD_STACK_SIZE, NULL);
+
+    //wiced_rtos_create_thread(&displayThreadHandle, THREAD_BASE_PRIORITY+4, NULL, displayThread, THREAD_STACK_SIZE, NULL);
 
     wiced_wifi_get_mac_address(&MacW);                             // Se obtiene la MAC del dispositivo
 
@@ -140,13 +141,13 @@ void application_start( ){
 
     dir_verify("/",&fs_handle,"/",ANTICOLISION);
     dir_verify("/",&fs_handle,"/",SF);
-    dir_verify("/",&fs_handle,"/",ACARREO);
+    //dir_verify("/",&fs_handle,"/",ACARREO);
+    dir_verify("/",&fs_handle,"/",PASAJEROS);   /* ------ Pasajeros */
 
-
-    file_verify(ACARREO_ROOT,&fs_handle,ACARREO_ROOT,date_get(&i2c_rtc));
+    //file_verify(ACARREO_ROOT,&fs_handle,ACARREO_ROOT,date_get(&i2c_rtc));
     file_verify(ANTICOLISION_ROOT,&fs_handle,ANTICOLISION_ROOT,date_get(&i2c_rtc));
     file_verify(SF_ROOT,&fs_handle,SF_ROOT,date_get(&i2c_rtc));
-
+    file_verify(PASAJEROS_ROOT,&fs_handle,PASAJEROS_ROOT,date_get(&i2c_rtc));  /* ----> Pasajeros */
 
 //    list_files(&fs_handle,ANTICOLISION_ROOT);
 //    list_files(&fs_handle,SF_ROOT);
@@ -170,10 +171,10 @@ void application_start( ){
 //    printf("despues %s \n",bt_joined.mac_lamp);
 
 ////
-
-//    Set_SSID("-SCSM-MONITOREO",20,WICED_UART_3);
-//    Set_KEY("-KM0n1t0r30#21",20,WICED_UART_3);
-//    Set_SERVER("-I10.90.120.10",17,WICED_UART_3);
+        // Red para provar en lasec
+    Set_SSID("-SCSM-MONITOREO",20,WICED_UART_3);
+    Set_KEY("-KM0n1t0r30#21",20,WICED_UART_3);
+    Set_SERVER("-I10.90.120.10",17,WICED_UART_3);
 //    Set_MASK("-M255.255.248.0",15,WICED_UART_3);
 //    Set_GATEWAY("-G10.90.120.1",16,WICED_UART_3);
 //    Set_IP("-C10.90.120.41",16,WICED_UART_3);
@@ -182,10 +183,10 @@ void application_start( ){
 ////
 
 
-        //
-//    Set_SSID("-Ssmartflow-dev",20,WICED_UART_3);
-//    Set_KEY("-KLasec123.",20,WICED_UART_3);
-//    Set_SERVER("-I10.174.107.60",20,WICED_UART_3);
+        // Fernando tlayoltita
+    //Set_SSID("-Ssmartflow-dev",20,WICED_UART_3);
+    //Set_KEY("-KLasec123.",20,WICED_UART_3);
+    //Set_SERVER("-I10.174.109.33",20,WICED_UART_3); //10.174.107.60
 //    Set_MASK("-M255.255.248.0",16,WICED_UART_3);
 //    Set_GATEWAY("-G10.174.107.30",16,WICED_UART_3);
 //    Set_IP("-C10.174.107.62",16,WICED_UART_3);
@@ -210,14 +211,18 @@ void application_start( ){
 //    Set_GATEWAY("-G10.117.103.254",16,WICED_UART_3);
 
 
-        Set_SSID("-STracking-SD",13,WICED_UART_3);
-        Set_KEY("-KX%baCU$rC5YC",17,WICED_UART_3);
-        Set_SERVER("-I10.178.72.76",17,WICED_UART_3);
+//        Set_SSID("-STracking-SD",13,WICED_UART_3);
+//        Set_KEY("-KX%baCU$rC5YC",17,WICED_UART_3);
+//        Set_SERVER("-I10.178.72.76",17,WICED_UART_3);
 //        Set_MASK("-M255.255.252.0",15,WICED_UART_3);
 //        Set_IP("-C10.178.55.50",16,WICED_UART_3);
 //        Set_GATEWAY("-G10.178.55.254",16,WICED_UART_3);
-        Set_config();
 
+//        /* Karim */
+        //Set_SSID("-S87377-0184",15,WICED_UART_3);
+        //Set_KEY("-KE$#c65&MiK7&uwxc12",22,WICED_UART_3);
+        //Set_SERVER("-I172.16.10.40",18,WICED_UART_3);    //10.174.110.100
+        Set_config();
 
 //            silent=WICED_TRUE;
     sent_file_flag=WICED_TRUE;

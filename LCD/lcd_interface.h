@@ -119,11 +119,11 @@ void displayThread(wiced_thread_arg_t arg)
             First_one=WICED_FALSE;
             oled_things=4;
         }
-        else if((_flag_aca==WICED_TRUE)){
-            First_one=WICED_FALSE;
-            _flag_aca=WICED_FALSE;
-            oled_things=5;
-        }
+//        else if((_flag_aca==WICED_TRUE)){
+//            First_one=WICED_FALSE;
+//            _flag_aca=WICED_FALSE;
+//            oled_things=5;
+//        }
         else if((_B_transit==WICED_TRUE)&&(First_one==WICED_TRUE)){
              First_one=WICED_FALSE;
              _B_transit=WICED_FALSE;
@@ -174,9 +174,9 @@ void displayThread(wiced_thread_arg_t arg)
                 case 4:
                     Set_Warning(&display,coun_lcd,"Evacuati",&lamp,&veh,WICED_TRUE);
                     break;
-                case 5:
-                    Set_Warning(&display,coun_lcd,&log_accarreos.name,&lamp,&veh,WICED_TRUE);
-                    break;
+//                case 5:
+//                    Set_Warning(&display,coun_lcd,&log_accarreos.name,&lamp,&veh,WICED_TRUE);
+//                    break;
                 case 6:
                     Set_Warning(&display,coun_lcd,TRANSIT,&lamp,&veh,WICED_TRUE);
                     break;

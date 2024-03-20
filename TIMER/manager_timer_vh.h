@@ -46,10 +46,11 @@ static wiced_timed_event_t Beacon_guardian;
 static wiced_timed_event_t Geo_guardian;
 
 static wiced_timed_event_t Collision_guardian;
-
+static wiced_timed_event_t H_passenger;
 
 static wiced_result_t guardian_v( void );
 static wiced_result_t guardian_V2( void );
+static wiced_result_t T_passenger( void );
 
 
 uint8_t last_count_l=1;
@@ -64,7 +65,7 @@ uint8_t rz_c=1;
 void publish30sec(void* arg);
 static wiced_result_t Beacon_V( void );
 static wiced_result_t Collision_V( void );
-static wiced_result_t Acarreo_V( void );
+//static wiced_result_t Acarreo_V( void );
 
 
 
@@ -72,7 +73,7 @@ void collision_event_log(wiced_thread_arg_t arg);
 void SearchWifi(wiced_thread_arg_t arg);
 
 void timer_lcd(void* arg);
-
+void passenger1(char *input);
 
 void init_all_timer(){
 /*  Initialize timer*/
@@ -90,7 +91,8 @@ void init_all_timer(){
         wiced_rtos_register_timed_event( &guardian, WICED_NETWORKING_WORKER_THREAD, &guardian_v, 1200, 0 );
         wiced_rtos_register_timed_event( &guardian2, WICED_NETWORKING_WORKER_THREAD, &guardian_V2, 1000, 0 );
         wiced_rtos_register_timed_event( &Geo_guardian, WICED_NETWORKING_WORKER_THREAD, &Beacon_V, 2100, 0 );
-        wiced_rtos_register_timed_event( &Beacon_guardian, WICED_NETWORKING_WORKER_THREAD, &Acarreo_V, 4500, 0 );
+        //wiced_rtos_register_timed_event( &H_passenger, WICED_NETWORKING_WORKER_THREAD, &T_passenger, 1400, 0 );
+        //wiced_rtos_register_timed_event( &Beacon_guardian, WICED_NETWORKING_WORKER_THREAD, &Acarreo_V, 4500, 0 );
 
 //        wiced_rtos_create_thread(&ThreadHandle_W, THREAD_BASE_PRIORITY+5, "WIFI", SearchWifi, THREAD_STACK_SIZE, NULL);
 
@@ -101,67 +103,49 @@ void init_all_timer(){
 }
 
 
-static wiced_result_t Acarreo_V( void ){
-
-//    for(int b=1;b<buff_aux;b++){
+//static wiced_result_t Acarreo_V( void ){
+//    if(strlen(log_accarreos.mac_bt)!=0){  /* Si se ingreso una mac entra aqui */
+//        wiced_filesystem_unmount(&fs_handle);
+//        init_sd(&fs_handle);
 //
-//               if(strlen(aux_log_collision[b].mac_bt)!=0){
-//                   printf("CCC %s,\n",aux_log_collision[b].mac_bt);
-//                   }
-//       }
-
-//         printf("\t%d\t%s\t%s\n",log_accarreos.type,log_accarreos.time_start,log_accarreos.mac_bt);
-
+//        read_data(ACARREO_ROOT,date_get(&i2c_rtc),&fs_handle);
 //
-//            memset(id_count,'1',2);
-    if(strlen(log_accarreos.mac_bt)!=0){
-        wiced_filesystem_unmount(&fs_handle);
-        init_sd(&fs_handle);
-
-        read_data(ACARREO_ROOT,date_get(&i2c_rtc),&fs_handle);
-
-        strcpy(log_accarreos.id,id_count);
-        log_accarreos.id[strlen(id_count)]='\0';
-
-        printf("%s",data_to_json_acarreo(&log_accarreos,s_Mac_W));
-        memset(filebuf,NULL,LOCAL_BUFFER_SIZE);
-
-        if(atoi(id_count)<=limit_save_file){
-            write_data_acarreo(ACARREO_ROOT,date_get(&i2c_rtc),&log_accarreos,s_Mac_W,&fs_handle);
-            memset(log_accarreos.date,NULL,12);
-            memset(log_accarreos.mac_bt,NULL,19);
-            memset(log_accarreos.name,NULL,18);
-            memset(log_accarreos.id,NULL,3);
-            memset(log_accarreos.time_start,NULL,12);
-        }
-
-//        log_accarreos.id=0;
-
-
-    }
-
+//        strcpy(log_accarreos.id,id_count);
+//        log_accarreos.id[strlen(id_count)]='\0';
 //
-    if((Product_f==WICED_TRUE)&&(GEOSF_F==WICED_TRUE)){
-         Product_f=WICED_FALSE;
-         GEOSF_F=WICED_FALSE;
-
-         buzz(200,0);
-         printf("prendio");
-     }
-    else if((Product_f==WICED_FALSE)&&(GEOSF_F==WICED_FALSE)){
-        Product_f=WICED_TRUE;
-        printf("no prendio nada\n");
-
-    }
-    printf("\t%d\t%d\n",Product_f,GEOSF_F);
-    GEOSF_F=WICED_FALSE;
-
-
-
-
-
-
-}
+//        printf("%s",data_to_json_acarreo(&log_accarreos,s_Mac_W));
+//        memset(filebuf,NULL,LOCAL_BUFFER_SIZE);
+//
+//        if(atoi(id_count)<=limit_save_file){
+//            write_data_acarreo(ACARREO_ROOT,date_get(&i2c_rtc),&log_accarreos,s_Mac_W,&fs_handle);
+//            memset(log_accarreos.date,NULL,12);
+//            memset(log_accarreos.mac_bt,NULL,19);
+//            memset(log_accarreos.name,NULL,18);
+//            memset(log_accarreos.id,NULL,3);
+//            memset(log_accarreos.time_start,NULL,12);
+//        }
+//
+////        log_accarreos.id=0;
+//
+//
+//    }
+//
+////
+//    if((Product_f==WICED_TRUE)&&(GEOSF_F==WICED_TRUE)){
+//         Product_f=WICED_FALSE;
+//         GEOSF_F=WICED_FALSE;
+//
+//         buzz(200,0);
+//         printf("prendio");
+//     }
+//    else if((Product_f==WICED_FALSE)&&(GEOSF_F==WICED_FALSE)){
+//        Product_f=WICED_TRUE;
+//        printf("no prendio nada\n");
+//
+//    }
+//    printf("\t%d\t%d\n",Product_f,GEOSF_F);
+//    GEOSF_F=WICED_FALSE;
+//}
 
 
 static wiced_result_t Collision_V( void ){
@@ -286,9 +270,11 @@ static wiced_result_t Beacon_V( void ){
             }
         }
         count_save=1;
-        if(count_beacon<buff_aux){
+        if(count_beacon<buff_aux){  /* Que pasa cuando count_beacon es mayo a 100, si encotro */
             count_beacon=1;
         }
+//        else                  // --- Agregado por mi
+//            count_beacon=1;   // --- Agregado por mi
     }
     count_save=count_save+1;
 
@@ -459,5 +445,87 @@ void Time_reboot(void* arg){
 
 }
 
+//static wiced_result_t T_passenger( void )
+//{
+//
+//}
+
+void passenger1(char *input){
+    if(strstr(input,_Passenger_in))
+    {
+        int x=0, number_p;
+        unsigned char str_split[128];
+
+        memcpy(str_split, input, strlen(input));
+        char * frist_split;
+        frist_split=strtok(str_split,_split_tama_2);
+
+        while(frist_split!=NULL)
+        {
+            switch (x)
+            {
+            case 0:
+                /* No hago nada */
+                break;
+            case 1:
+                number_p = atoi(frist_split);
+                passenger[0].Pass_number= number_p;
+                printf("\n Paasenger number %d \n",passenger[0].Pass_number);
+                break;
+            case 2:
+                memcpy(passenger[0].mac_bt,frist_split,strlen(frist_split));
+                printf("\n mac: %s \n",passenger[0].mac_bt);
+                break;
+            default:
+                break;
+            }
+            x++;
+            frist_split=strtok(NULL,_split_tama_2);
+        }
+        /* Tomo la hora de llegada/salida del pasajero y mac y el numero de pasajero */
+        strcpy(passenger[0].time_start,time_get(&i2c_rtc));
+        strcpy(passenger[0].date,date_get_log(&i2c_rtc));
+        passenger[0].caso = 1;                                 /* Variable para saber el caso IN/OUT */
+
+        write_passenger(PASAJEROS_ROOT,date_get(&i2c_rtc),&passenger,&fs_handle);
+    }
+    else if(strstr(input,_Passenger_out))
+    {
+        int x=0, number_p;
+        unsigned char str_split[50];
+        memcpy(str_split,input, strlen(input));
+
+        char * frist_split;
+        frist_split=strtok(str_split,_split_tama_2);
+        while(frist_split!=NULL)
+        {
+            switch(x)
+            {
+            case 0:
+                /* No hago nada */
+                break;
+            case 1:
+                number_p = atoi(frist_split);
+                passenger[0].Pass_number= number_p;
+                printf("\n Paasenger number %d \n",passenger[0].Pass_number);
+                break;
+            case 2:
+                memcpy(passenger[0].mac_bt,frist_split,strlen(frist_split));
+                printf("\n mac: %s \n",passenger[0].mac_bt);
+                break;
+            default:
+                break;
+            }
+            x++;
+            frist_split=strtok(NULL,_split_tama_2);
+        }
+        /* Tomo la hora de llegada/salida del pasajero y mac y el numero de pasajero */
+        strcpy(passenger[0].time_start,time_get(&i2c_rtc));
+        strcpy(passenger[0].date,date_get_log(&i2c_rtc));
+        passenger[0].caso = 2;                                 /* Variable para saber el caso IN/OUT */
+        write_passenger(PASAJEROS_ROOT,date_get(&i2c_rtc),&passenger,&fs_handle);
+
+    }
+}
 
 #endif  /* stdbool.h */
