@@ -88,6 +88,8 @@ wiced_bool_t button_down_net=WICED_FALSE;
 
     wiced_bool_t send_data_task=WICED_FALSE;
 
+    uint8_t send_passanger_sd = 0;
+
 uint8_t c_silent=1;
 wiced_bool_t silent=WICED_FALSE;
 wiced_bool_t frist_seen_silent=WICED_FALSE;

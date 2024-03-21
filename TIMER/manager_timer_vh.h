@@ -104,25 +104,28 @@ void init_all_timer(){
 
 static wiced_result_t T_passenger( void )
 {
-//    for(uint8_t i=0;i<4;i++)
-//    {
-//        if(strlen(passenger[i].mac_bt) != 0)
-//           {
-//               memcpy(aux_p.mac_bt,passenger[i].mac_bt,strlen(passenger[i].mac_bt));                /* mac */
-//               memcpy(aux_p.date,passenger[i].date,strlen(passenger[i].date));                      /* fecha */
-//               memcpy(aux_p.time_start,passenger[i].time_start,strlen(passenger[i].time_start));    /* time */
-//               aux_p.Pass_number=passenger[i].Pass_number;
-//               aux_p.caso=passenger[i].caso;
-//
-//               write_passenger(PASAJEROS_ROOT,date_get(&i2c_rtc),&aux_p,&fs_handle);
-//
-//              memset(passenger[i].mac_bt,0,strlen(passenger[i].mac_bt));
-//              memset(passenger[i].date,0,strlen(passenger[i].date));
-//              memset(passenger[i].time_start,0,strlen(passenger[i].time_start));
-//              passenger[i].Pass_number=0;
-//              passenger[i].caso=0;
-//           }
-//    }
+    if(send_passanger_sd == 0)
+    {
+        for(uint8_t i=0;i<4;i++)
+        {
+            if(strlen(passenger[i].mac_bt) != 0)
+            {
+                memcpy(aux_p.mac_bt,passenger[i].mac_bt,strlen(passenger[i].mac_bt));                /* mac */
+                memcpy(aux_p.date,passenger[i].date,strlen(passenger[i].date));                      /* fecha */
+                memcpy(aux_p.time_start,passenger[i].time_start,strlen(passenger[i].time_start));    /* time */
+                aux_p.Pass_number=passenger[i].Pass_number;
+                aux_p.caso=passenger[i].caso;
+
+                write_passenger(PASAJEROS_ROOT,date_get(&i2c_rtc),&aux_p,&fs_handle);
+
+                memset(passenger[i].mac_bt,0,strlen(passenger[i].mac_bt));
+                memset(passenger[i].date,0,strlen(passenger[i].date));
+                memset(passenger[i].time_start,0,strlen(passenger[i].time_start));
+                passenger[i].Pass_number=0;
+                passenger[i].caso=0;
+            }
+        }
+    }
 }
 
 //static wiced_result_t Acarreo_V( void ){
