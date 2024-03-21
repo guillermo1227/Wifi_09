@@ -11,7 +11,9 @@
 *
 *********************************************************************************/
 /* Codigo enviado a tlayoltita con fernando, cambio en la conexion de wifi con do while, se
- * comento un if en tv_send_1 */
+ * comento un if en tv_send_1
+ * Version de pasajeros, el bluetooth le manda la la mac del pasajero y este solo lo recibe y lo guarda en SD
+ * version sencilla*/
 
 
 #include "wiced.h"
