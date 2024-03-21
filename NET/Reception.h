@@ -538,40 +538,54 @@ int tcp_passenger(void)
 
               // Initialize the TCP stream
               wiced_tcp_stream_init(&stream, &socket);
-      //
 
-              // Send the data via the stream
-    //                if(sent_file_flag==WICED_TRUE){
+//                        coun=read_data(PASAJEROS_ROOT,date_get(&i2c_rtc),&fs_handle);
+//                        /* get the first token */
+//                        token = strtok(filebuf, s);
+//                        /* walk through other tokens */
+//                        if(coun!=0){
+//
+//                            while( token != NULL ) {
+//                                            //printf( " >>>>>  %s\n", token );
+//                                  wiced_rtos_delay_microseconds( 10 );
+//                                  //printf("\n Mando algo \n");
+//                                  sprintf(data_out,"\nG;%s\r\n",token);
+//                                  result=wiced_tcp_stream_write(&stream, data_out, strlen(data_out));
+//
+//                                     if(result==WICED_TCPIP_SUCCESS){
+//    //                                     wiced_uart_transmit_bytes(WICED_UART_1,(("%s",data_out)),strlen(data_out));
+//                                         send_data_task=WICED_TRUE;
+//                                         printf( " >>>>>  %s\n", token );
+//                                      }
+//                                 token = strtok(NULL, s);
+//                                 coun--;
+//                                }
+//                        }
+//                        else{
+//                            result=wiced_tcp_stream_write(&stream, NO_DATA, strlen(NO_DATA));
+//                            if(result==WICED_TCPIP_SUCCESS){
+//                               wiced_uart_transmit_bytes(WICED_UART_1,NO_DATA,strlen(NO_DATA));
+//                               send_data_task=WICED_TRUE;
+//                            }
+//                        }
 
-                        coun=read_data(PASAJEROS_ROOT,date_get(&i2c_rtc),&fs_handle);
-                        /* get the first token */
-                        token = strtok(filebuf, s);
-                        /* walk through other tokens */
-                        if(coun!=0){
-
-                            while( token != NULL ) {
-                                            //printf( " >>>>>  %s\n", token );
-                                  wiced_rtos_delay_microseconds( 10 );
-                                  //printf("\n Mando algo \n");
-                                  sprintf(data_out,"\nG;%s\r\n",token);
-                                  result=wiced_tcp_stream_write(&stream, data_out, strlen(data_out));
-
-                                     if(result==WICED_TCPIP_SUCCESS){
-    //                                     wiced_uart_transmit_bytes(WICED_UART_1,(("%s",data_out)),strlen(data_out));
-                                         send_data_task=WICED_TRUE;
-                                         printf( " >>>>>  %s\n", token );
-                                      }
-                                 token = strtok(NULL, s);
-                                 coun--;
-                                }
-                        }
-                        else{
-                            result=wiced_tcp_stream_write(&stream, NO_DATA, strlen(NO_DATA));
-                            if(result==WICED_TCPIP_SUCCESS){
-                               wiced_uart_transmit_bytes(WICED_UART_1,NO_DATA,strlen(NO_DATA));
-                               send_data_task=WICED_TRUE;
-                            }
-                        }
+              for(uint8_t k=0; k<4;k++)
+              {
+                  if(strlen(passenger[k].mac_bt) != 0 && passenger[k].caso == 1)
+                  {
+                      sprintf(data_out,"\nG;<IN>%d|%s|%s-%s\r\n",passenger[k].Pass_number,passenger[k].mac_bt,passenger[k].date,passenger[k].time_start);
+                      result=wiced_tcp_stream_write(&stream, data_out, strlen(data_out));
+                      printf("-->IN %s",data_out);
+                      memset(data_out,NULL,1000);
+                  }
+                  elseif(strlen(passenger[k].mac_bt) != 0 && passenger[k].caso == 2)
+                  {
+                      sprintf(data_out,"\nG;<OUT>%d|%s|%s-%s\r\n",passenger[k].Pass_number,passenger[k].mac_bt,passenger[k].date,passenger[k].time_start);
+                      result=wiced_tcp_stream_write(&stream, data_out, strlen(data_out));
+                      printf("-->OUT %s",data_out);
+                      memset(data_out,NULL,1000);
+                  }
+              }
 
                                 wiced_rtos_set_semaphore(&tcpGatewaySemaphore);
 
@@ -581,9 +595,6 @@ int tcp_passenger(void)
 
     //                }
 
-
-      //              memset(sendMessage,NULL,80);
-      //              memset(data_out,NULL,1000);
 
                     sent_file_flag=!sent_file_flag;
 

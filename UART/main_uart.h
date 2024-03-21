@@ -46,6 +46,7 @@ struct telemetry_data log_telemetry_data;
 struct location_data master_data;
 struct tempo AUX_BEACON[buff_aux];
 struct tempo_collision aux_log_collision[buff_aux];
+struct aux_pass aux_p; /* Aux strct for copy the values of the true strut */
 
 
 typedef struct data_in

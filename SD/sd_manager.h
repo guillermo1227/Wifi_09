@@ -83,7 +83,7 @@ void write_data_collision(char* TGT_DIR,const char* filename,wiced_filesystem_t*
 
 int dir_verify( char* dir_to_file_create,wiced_filesystem_t* fs_handle, const char* dir_name, char* date );
 
-void write_passenger(char* TGT_DIR, const char* filename, struct Passenger *dataP,wiced_filesystem_t* fs_handle);
+void write_passenger(char* TGT_DIR, const char* filename, struct aux_pass *aux_p,wiced_filesystem_t* fs_handle);
 
 void init_sd(wiced_filesystem_t* fs_handle){
     wiced_result_t result;
@@ -262,7 +262,7 @@ void write_data(char* TGT_DIR,const char* filename,struct location_data dataX,wi
 
 }
 
-void write_passenger(char* TGT_DIR, const char* filename, struct Passenger *passenger,wiced_filesystem_t* fs_handle)
+void write_passenger(char* TGT_DIR, const char* filename, struct aux_pass *aux_p,wiced_filesystem_t* fs_handle)
 {
     wiced_dir_t dir;
     wiced_file_t f_src;
@@ -278,8 +278,8 @@ void write_passenger(char* TGT_DIR, const char* filename, struct Passenger *pass
     }
     else
     {
-        printf("\n Texto %s, numero de byts a escribir %d \n",data_to_json_passenger(passenger),strlen(data_to_json_passenger(passenger)));
-        if(WICED_SUCCESS == wiced_filesystem_file_write( &f_src, (const char *)data_to_json_passenger(passenger),strlen(data_to_json_passenger(passenger)), &write_count ))
+        printf("\n Texto %s, numero de byts a escribir %d \n",data_to_json_passenger(aux_p),strlen(data_to_json_passenger(aux_p)));
+        if(WICED_SUCCESS == wiced_filesystem_file_write( &f_src, (const char *)data_to_json_passenger(aux_p),strlen(data_to_json_passenger(aux_p)), &write_count ))
         {
             printf("\n Text insert succedul \n");
         }

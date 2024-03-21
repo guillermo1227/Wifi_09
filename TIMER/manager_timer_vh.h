@@ -73,7 +73,7 @@ void collision_event_log(wiced_thread_arg_t arg);
 void SearchWifi(wiced_thread_arg_t arg);
 
 void timer_lcd(void* arg);
-void passenger1(char *input);
+//void passenger1(char *input);
 
 void init_all_timer(){
 /*  Initialize timer*/
@@ -91,7 +91,7 @@ void init_all_timer(){
         wiced_rtos_register_timed_event( &guardian, WICED_NETWORKING_WORKER_THREAD, &guardian_v, 1200, 0 );
         wiced_rtos_register_timed_event( &guardian2, WICED_NETWORKING_WORKER_THREAD, &guardian_V2, 1000, 0 );
         wiced_rtos_register_timed_event( &Geo_guardian, WICED_NETWORKING_WORKER_THREAD, &Beacon_V, 2100, 0 );
-        //wiced_rtos_register_timed_event( &H_passenger, WICED_NETWORKING_WORKER_THREAD, &T_passenger, 1400, 0 );
+        wiced_rtos_register_timed_event( &H_passenger, WICED_NETWORKING_WORKER_THREAD, &T_passenger, 4500, 0 );
         //wiced_rtos_register_timed_event( &Beacon_guardian, WICED_NETWORKING_WORKER_THREAD, &Acarreo_V, 4500, 0 );
 
 //        wiced_rtos_create_thread(&ThreadHandle_W, THREAD_BASE_PRIORITY+5, "WIFI", SearchWifi, THREAD_STACK_SIZE, NULL);
@@ -102,6 +102,28 @@ void init_all_timer(){
 
 }
 
+static wiced_result_t T_passenger( void )
+{
+//    for(uint8_t i=0;i<4;i++)
+//    {
+//        if(strlen(passenger[i].mac_bt) != 0)
+//           {
+//               memcpy(aux_p.mac_bt,passenger[i].mac_bt,strlen(passenger[i].mac_bt));                /* mac */
+//               memcpy(aux_p.date,passenger[i].date,strlen(passenger[i].date));                      /* fecha */
+//               memcpy(aux_p.time_start,passenger[i].time_start,strlen(passenger[i].time_start));    /* time */
+//               aux_p.Pass_number=passenger[i].Pass_number;
+//               aux_p.caso=passenger[i].caso;
+//
+//               write_passenger(PASAJEROS_ROOT,date_get(&i2c_rtc),&aux_p,&fs_handle);
+//
+//              memset(passenger[i].mac_bt,0,strlen(passenger[i].mac_bt));
+//              memset(passenger[i].date,0,strlen(passenger[i].date));
+//              memset(passenger[i].time_start,0,strlen(passenger[i].time_start));
+//              passenger[i].Pass_number=0;
+//              passenger[i].caso=0;
+//           }
+//    }
+}
 
 //static wiced_result_t Acarreo_V( void ){
 //    if(strlen(log_accarreos.mac_bt)!=0){  /* Si se ingreso una mac entra aqui */
@@ -445,87 +467,82 @@ void Time_reboot(void* arg){
 
 }
 
-//static wiced_result_t T_passenger( void )
-//{
+//void passenger1(char *input){
+//    if(strstr(input,_Passenger_in))
+//    {
+//        int x=0, number_p;
+//        unsigned char str_split[128];
 //
+//        memcpy(str_split, input, strlen(input));
+//        char * frist_split;
+//        frist_split=strtok(str_split,_split_tama_2);
+//
+//        while(frist_split!=NULL)
+//        {
+//            switch (x)
+//            {
+//            case 0:
+//                /* No hago nada */
+//                break;
+//            case 1:
+//                number_p = atoi(frist_split);
+//                passenger[0].Pass_number= number_p;
+//                printf("\n Paasenger number %d \n",passenger[0].Pass_number);
+//                break;
+//            case 2:
+//                memcpy(passenger[0].mac_bt,frist_split,strlen(frist_split));
+//                printf("\n mac: %s \n",passenger[0].mac_bt);
+//                break;
+//            default:
+//                break;
+//            }
+//            x++;
+//            frist_split=strtok(NULL,_split_tama_2);
+//        }
+//        /* Tomo la hora de llegada/salida del pasajero y mac y el numero de pasajero */
+//        strcpy(passenger[0].time_start,time_get(&i2c_rtc));
+//        strcpy(passenger[0].date,date_get_log(&i2c_rtc));
+//        passenger[0].caso = 1;                                 /* Variable para saber el caso IN/OUT */
+//
+//        write_passenger(PASAJEROS_ROOT,date_get(&i2c_rtc),&passenger,&fs_handle);
+//    }
+//    else if(strstr(input,_Passenger_out))
+//    {
+//        int x=0, number_p;
+//        unsigned char str_split[50];
+//        memcpy(str_split,input, strlen(input));
+//
+//        char * frist_split;
+//        frist_split=strtok(str_split,_split_tama_2);
+//        while(frist_split!=NULL)
+//        {
+//            switch(x)
+//            {
+//            case 0:
+//                /* No hago nada */
+//                break;
+//            case 1:
+//                number_p = atoi(frist_split);
+//                passenger[0].Pass_number= number_p;
+//                printf("\n Paasenger number %d \n",passenger[0].Pass_number);
+//                break;
+//            case 2:
+//                memcpy(passenger[0].mac_bt,frist_split,strlen(frist_split));
+//                printf("\n mac: %s \n",passenger[0].mac_bt);
+//                break;
+//            default:
+//                break;
+//            }
+//            x++;
+//            frist_split=strtok(NULL,_split_tama_2);
+//        }
+//        /* Tomo la hora de llegada/salida del pasajero y mac y el numero de pasajero */
+//        strcpy(passenger[0].time_start,time_get(&i2c_rtc));
+//        strcpy(passenger[0].date,date_get_log(&i2c_rtc));
+//        passenger[0].caso = 2;                                 /* Variable para saber el caso IN/OUT */
+//        write_passenger(PASAJEROS_ROOT,date_get(&i2c_rtc),&passenger,&fs_handle);
+//
+//    }
 //}
-
-void passenger1(char *input){
-    if(strstr(input,_Passenger_in))
-    {
-        int x=0, number_p;
-        unsigned char str_split[128];
-
-        memcpy(str_split, input, strlen(input));
-        char * frist_split;
-        frist_split=strtok(str_split,_split_tama_2);
-
-        while(frist_split!=NULL)
-        {
-            switch (x)
-            {
-            case 0:
-                /* No hago nada */
-                break;
-            case 1:
-                number_p = atoi(frist_split);
-                passenger[0].Pass_number= number_p;
-                printf("\n Paasenger number %d \n",passenger[0].Pass_number);
-                break;
-            case 2:
-                memcpy(passenger[0].mac_bt,frist_split,strlen(frist_split));
-                printf("\n mac: %s \n",passenger[0].mac_bt);
-                break;
-            default:
-                break;
-            }
-            x++;
-            frist_split=strtok(NULL,_split_tama_2);
-        }
-        /* Tomo la hora de llegada/salida del pasajero y mac y el numero de pasajero */
-        strcpy(passenger[0].time_start,time_get(&i2c_rtc));
-        strcpy(passenger[0].date,date_get_log(&i2c_rtc));
-        passenger[0].caso = 1;                                 /* Variable para saber el caso IN/OUT */
-
-        write_passenger(PASAJEROS_ROOT,date_get(&i2c_rtc),&passenger,&fs_handle);
-    }
-    else if(strstr(input,_Passenger_out))
-    {
-        int x=0, number_p;
-        unsigned char str_split[50];
-        memcpy(str_split,input, strlen(input));
-
-        char * frist_split;
-        frist_split=strtok(str_split,_split_tama_2);
-        while(frist_split!=NULL)
-        {
-            switch(x)
-            {
-            case 0:
-                /* No hago nada */
-                break;
-            case 1:
-                number_p = atoi(frist_split);
-                passenger[0].Pass_number= number_p;
-                printf("\n Paasenger number %d \n",passenger[0].Pass_number);
-                break;
-            case 2:
-                memcpy(passenger[0].mac_bt,frist_split,strlen(frist_split));
-                printf("\n mac: %s \n",passenger[0].mac_bt);
-                break;
-            default:
-                break;
-            }
-            x++;
-            frist_split=strtok(NULL,_split_tama_2);
-        }
-        /* Tomo la hora de llegada/salida del pasajero y mac y el numero de pasajero */
-        strcpy(passenger[0].time_start,time_get(&i2c_rtc));
-        strcpy(passenger[0].date,date_get_log(&i2c_rtc));
-        passenger[0].caso = 2;                                 /* Variable para saber el caso IN/OUT */
-        write_passenger(PASAJEROS_ROOT,date_get(&i2c_rtc),&passenger,&fs_handle);
-
-    }
-}
 
 #endif  /* stdbool.h */
