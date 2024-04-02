@@ -74,6 +74,7 @@ void SearchWifi(wiced_thread_arg_t arg);
 
 void timer_lcd(void* arg);
 //void passenger1(char *input);
+wiced_result_t result2;
 
 void init_all_timer(){
 /*  Initialize timer*/
@@ -108,69 +109,39 @@ static wiced_result_t T_passenger( void )
     {
         for(uint8_t i=0;i<4;i++)
         {
-            if(strlen(passenger[i].mac_bt) != 0)
+            if(passenger[i].save_in_sd == out_sd)
             {
+                printf(" Inside timer save something ----> ");
                 memcpy(aux_p.mac_bt,passenger[i].mac_bt,strlen(passenger[i].mac_bt));                /* mac */
                 memcpy(aux_p.date,passenger[i].date,strlen(passenger[i].date));                      /* fecha */
                 memcpy(aux_p.time_start,passenger[i].time_start,strlen(passenger[i].time_start));    /* time */
-                aux_p.Pass_number=passenger[i].Pass_number;
-                aux_p.caso=passenger[i].caso;
+                aux_p.Pass_number=passenger[i].Pass_number;                                          /* Numero de pasajero */
+                aux_p.caso=passenger[i].caso;                                                        /* Caso, in/out */
 
-                write_passenger(PASAJEROS_ROOT,date_get(&i2c_rtc),&aux_p,&fs_handle);
-
-                memset(passenger[i].mac_bt,0,strlen(passenger[i].mac_bt));
-                memset(passenger[i].date,0,strlen(passenger[i].date));
-                memset(passenger[i].time_start,0,strlen(passenger[i].time_start));
-                passenger[i].Pass_number=0;
-                passenger[i].caso=0;
+                printf("\n ------> Caso %d\n",aux_p.caso);
+                write_passenger(PASAJEROS_ROOT,date_get(&i2c_rtc),&aux_p,&fs_handle,s_Mac_W);
+                passenger[i].save_in_sd = in_sd;
             }
+            else if(passenger[i].save_in_sd == in_sd)
+                printf("\n La mac ya esta guardada pero no borro, mantengo para cuado haya conexion %s \n",passenger[i].mac_bt);
         }
     }
-}
 
-//static wiced_result_t Acarreo_V( void ){
-//    if(strlen(log_accarreos.mac_bt)!=0){  /* Si se ingreso una mac entra aqui */
-//        wiced_filesystem_unmount(&fs_handle);
-//        init_sd(&fs_handle);
-//
-//        read_data(ACARREO_ROOT,date_get(&i2c_rtc),&fs_handle);
-//
-//        strcpy(log_accarreos.id,id_count);
-//        log_accarreos.id[strlen(id_count)]='\0';
-//
-//        printf("%s",data_to_json_acarreo(&log_accarreos,s_Mac_W));
-//        memset(filebuf,NULL,LOCAL_BUFFER_SIZE);
-//
-//        if(atoi(id_count)<=limit_save_file){
-//            write_data_acarreo(ACARREO_ROOT,date_get(&i2c_rtc),&log_accarreos,s_Mac_W,&fs_handle);
-//            memset(log_accarreos.date,NULL,12);
-//            memset(log_accarreos.mac_bt,NULL,19);
-//            memset(log_accarreos.name,NULL,18);
-//            memset(log_accarreos.id,NULL,3);
-//            memset(log_accarreos.time_start,NULL,12);
-//        }
-//
-////        log_accarreos.id=0;
-//
-//
-//    }
-//
-////
-//    if((Product_f==WICED_TRUE)&&(GEOSF_F==WICED_TRUE)){
-//         Product_f=WICED_FALSE;
-//         GEOSF_F=WICED_FALSE;
-//
-//         buzz(200,0);
-//         printf("prendio");
-//     }
-//    else if((Product_f==WICED_FALSE)&&(GEOSF_F==WICED_FALSE)){
-//        Product_f=WICED_TRUE;
-//        printf("no prendio nada\n");
-//
-//    }
-//    printf("\t%d\t%d\n",Product_f,GEOSF_F);
-//    GEOSF_F=WICED_FALSE;
-//}
+    if((Product_f==WICED_TRUE)&&(GEOSF_F==WICED_TRUE)){
+             Product_f=WICED_FALSE;
+             GEOSF_F=WICED_FALSE;
+
+             buzz(200,0);
+             printf("prendio");
+         }
+        else if((Product_f==WICED_FALSE)&&(GEOSF_F==WICED_FALSE)){
+            Product_f=WICED_TRUE;
+            printf("no prendio nada\n");
+
+        }
+        printf("\t%d\t%d\n",Product_f,GEOSF_F);
+        GEOSF_F=WICED_FALSE;
+}
 
 
 static wiced_result_t Collision_V( void ){

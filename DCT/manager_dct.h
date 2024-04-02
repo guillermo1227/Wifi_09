@@ -46,6 +46,10 @@ static wiced_result_t Up_net();
 static wiced_result_t Un_Set_config(uint8_t value);
 void Set_flag_charger(uint8_t value);
 uint8_t  is_charger();
+//void save_nvram_passenger(char *mac,int a);
+void save_nvram_passenger(char *mac,int a, char *start, char *date, uint8_t cass);
+void chec_passenger_save(void);
+void delete_all_passenger(void);                                                        /* Delete all passenger */
 
 static wiced_result_t  is_Access();
 
@@ -105,6 +109,9 @@ uint8_t get_gpio_menssage(int index){
            case 9:
               result_value=app_dct->DCT2;
               break;
+           case 10:
+               result_value=app_dct->DCT4;
+               break;
            default:
                break;
        }
@@ -521,6 +528,134 @@ void get_mac_bt (){
 
         wiced_dct_read_unlock( dct_app, WICED_FALSE );
 
+
+}
+
+void save_nvram_passenger(char *mac,int a, char *start, char *date, uint8_t cass)
+{
+    printf("\n Mac a guardar %s Posicion %d \n",mac,a);
+    dct_read_write_app_dct_t*       app_dct                  = NULL;
+
+        /* get the App config section for modifying, any memory allocation required would be done inside wiced_dct_read_lock() */
+        wiced_dct_read_lock( (void**) &app_dct, WICED_TRUE, DCT_APP_SECTION, 0, sizeof( *app_dct ) );
+        switch(a)
+        {
+        case 1:
+            memcpy(app_dct->passenger1, mac,strlen(mac));   /* Mac */
+            app_dct->caso1[0] = cass;                       /* Caso de IN / OUT */
+            memcpy(app_dct->start1,start, strlen(start));
+            memcpy(app_dct->date1,date, strlen(date));
+            break;
+        case 2:
+            memcpy(app_dct->passenger2, mac,strlen(mac));
+            app_dct->caso1[1] = cass;
+            memcpy(app_dct->start2,start, strlen(start));
+            memcpy(app_dct->date2,date, strlen(date));
+            break;
+        case 3:
+            memcpy(app_dct->passenger3, mac,strlen(mac));
+            app_dct->caso1[2] = cass;
+            memcpy(app_dct->start3,start, strlen(start));
+            memcpy(app_dct->date3,date, strlen(date));
+            break;
+        case 4:
+            memcpy(app_dct->passenger4, mac,strlen(mac));
+            app_dct->caso1[3] = cass;
+            memcpy(app_dct->start4,start, strlen(start));
+            memcpy(app_dct->date4,date, strlen(date));
+            break;
+        }
+        app_dct->DCT4 = 1;  /* Something is inside of the passenger */
+        wiced_dct_write( (const void*) app_dct, DCT_APP_SECTION, 0, sizeof(dct_read_write_app_dct_t) );
+}
+
+chec_passenger_save()
+{
+    dct_read_write_app_dct_t*       app_dct                  = NULL;
+
+    /* get the App config section for modifying, any memory allocation required would be done inside wiced_dct_read_lock() */
+    wiced_dct_read_lock( (void**) &app_dct, WICED_TRUE, DCT_APP_SECTION, 0, sizeof( *app_dct ) );
+
+
+    if(strlen(app_dct->passenger1) != 0)
+    {
+        memcpy(passenger[0].mac_bt,app_dct->passenger1, strlen(app_dct->passenger1));
+        passenger[0].Pass_number=1;
+        passenger[0].caso = app_dct->caso1[0];
+        memcpy(passenger[0].time_start,app_dct->start1, strlen(app_dct->start1));
+        memcpy(passenger[0].date,app_dct->date1, strlen(app_dct->date1));
+        printf("\n **was save 1 \n");
+    }
+    if(strlen(app_dct->passenger2) != 0)
+    {
+        memcpy(passenger[1].mac_bt,app_dct->passenger2, strlen(app_dct->passenger2));
+        passenger[1].Pass_number=2;
+        passenger[1].caso = app_dct->caso1[1];
+        memcpy(passenger[1].time_start,app_dct->start2, strlen(app_dct->start2));
+        memcpy(passenger[1].date,app_dct->date2, strlen(app_dct->date2));
+        printf("\n **was save 2 \n");
+    }
+    if(strlen(app_dct->passenger3) != 0)
+    {
+        memcpy(passenger[2].mac_bt,app_dct->passenger3, strlen(app_dct->passenger3));
+        passenger[2].Pass_number=3;
+        passenger[2].caso = app_dct->caso1[2];
+        memcpy(passenger[2].time_start,app_dct->start3, strlen(app_dct->start3));
+        memcpy(passenger[2].date,app_dct->date3, strlen(app_dct->date3));
+        printf("\n **was save 3 \n");
+    }
+    if(strlen(app_dct->passenger4) != 0)
+    {
+        memcpy(passenger[3].mac_bt,app_dct->passenger4, strlen(app_dct->passenger4));
+        passenger[3].Pass_number=4;
+        passenger[3].caso = app_dct->caso1[3];
+        memcpy(passenger[3].time_start,app_dct->start4, strlen(app_dct->start4));
+        memcpy(passenger[3].date,app_dct->date4, strlen(app_dct->date4));
+        printf("\n **was save 4 \n");
+    }
+
+}
+
+void delete_all_passenger(void)
+{
+    dct_read_write_app_dct_t*       app_dct                  = NULL;
+
+    /* get the App config section for modifying, any memory allocation required would be done inside wiced_dct_read_lock() */
+    wiced_dct_read_lock( (void**) &app_dct, WICED_TRUE, DCT_APP_SECTION, 0, sizeof( *app_dct ) );
+
+    app_dct->DCT4=0;
+
+    memset(app_dct->passenger1,NULL,strlen(app_dct->passenger1));
+    memset(app_dct->passenger2,NULL,strlen(app_dct->passenger2));
+    memset(app_dct->passenger3,NULL,strlen(app_dct->passenger3));
+    memset(app_dct->passenger4,NULL,strlen(app_dct->passenger4));
+
+    app_dct->caso1[0] = 0;
+    app_dct->caso1[1] = 0;
+    app_dct->caso1[2] = 0;
+    app_dct->caso1[3] = 0;
+
+    memset(app_dct->start1,NULL,strlen(app_dct->start1));
+    memset(app_dct->start2,NULL,strlen(app_dct->start2));
+    memset(app_dct->start3,NULL,strlen(app_dct->start3));
+    memset(app_dct->start4,NULL,strlen(app_dct->start4));
+
+    memset(app_dct->date1,NULL,strlen(app_dct->date1));
+    memset(app_dct->date2,NULL,strlen(app_dct->date2));
+    memset(app_dct->date3,NULL,strlen(app_dct->date3));
+    memset(app_dct->date4,NULL,strlen(app_dct->date4));
+
+    wiced_dct_write( (const void*) app_dct, DCT_APP_SECTION, 0, sizeof(dct_read_write_app_dct_t) );
+
+    memset(passenger[0].mac_bt,0,strlen(passenger[0].mac_bt));
+    memset(passenger[1].mac_bt,0,strlen(passenger[1].mac_bt));
+    memset(passenger[2].mac_bt,0,strlen(passenger[2].mac_bt));
+    memset(passenger[3].mac_bt,0,strlen(passenger[3].mac_bt));
+
+    passenger[0].caso = 0;
+    passenger[1].caso = 0;
+    passenger[2].caso = 0;
+    passenger[3].caso = 0;
 
 }
 

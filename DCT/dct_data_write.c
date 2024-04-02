@@ -1,13 +1,13 @@
 /**********************************************************************************
-* Copyright (C) 2018-2021 LASEC®️ Telecomunicaciones S.A.P.I. de C.V.
+* Copyright (C) 2018-2021 LASECÂ®ï¸� Telecomunicaciones S.A.P.I. de C.V.
 * All rights reserved.
 *
-* This document is the property of LASEC®️ Telecomunicaciones S.A.P.I. de C.V.
+* This document is the property of LASECÂ®ï¸� Telecomunicaciones S.A.P.I. de C.V.
 * It is considered confidential and proprietary.
 *
 * This document may not be reproduced or transmitted in any form,
 * in whole or in part, without the express written permission of
-* LASEC®️ Telecomunicaciones S.A.P.I. de C.V.
+* LASECÂ®ï¸� Telecomunicaciones S.A.P.I. de C.V.
 *
 *********************************************************************************/
 
@@ -55,9 +55,19 @@ DEFINE_APP_DCT(dct_read_write_app_dct_t)
     .DCT8               =NULL,
     .DCT9               =NULL,
     .TxPower            =32,
-
-
-
+    .passenger1         =NULL,
+    .passenger2         =NULL,
+    .passenger3         =NULL,
+    .passenger4         =NULL,
+    .caso1              =NULL,
+    .start1             =NULL,
+    .start2             =NULL,
+    .start3             =NULL,
+    .start4             =NULL,
+    .date1              =NULL,
+    .date2              =NULL,
+    .date3              =NULL,
+    .date4              =NULL,
 };
 
 /******************************************************

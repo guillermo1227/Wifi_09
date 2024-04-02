@@ -182,6 +182,8 @@ void main_uart(wiced_thread_arg_t arg){
                     sprintf(uart3,"%s\n",rx_buffer3);
 //                    wiced_uart_transmit_bytes( WICED_UART_1, uart3, strlen(uart3));
 
+                    passenger1(rx_buffer3);
+
                     lcd_data_update(rx_buffer3,&count_v,&count_l,&proximity);
                     lcd_fallen_update(rx_buffer3,&lcd_fallen);      //Aqui si llega BNM y BEAC ---> _B_transit=WICED_TRUE; si fal==1 ---> fallen_f=WICED_TRUE;
 //                    SEND_OTA(rx_buffer3);
@@ -192,7 +194,6 @@ void main_uart(wiced_thread_arg_t arg){
                     data_bt_send(rx_buffer3);
 
                     //tamagochi(rx_buffer3,&log_accarreos);
-                    passenger1(rx_buffer3);
 //                    limit_log=id_revived(rx_buffer3);
 
                     memset(&rx_buffer3,'\0',RX_BUFFER_SIZE);

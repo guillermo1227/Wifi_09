@@ -1,13 +1,13 @@
 /**********************************************************************************
-* Copyright (C) 2018-2021 LASEC®️ Telecomunicaciones S.A.P.I. de C.V.
+* Copyright (C) 2018-2021 LASECÂ®ï¸� Telecomunicaciones S.A.P.I. de C.V.
 * All rights reserved.
 *
-* This document is the property of LASEC®️ Telecomunicaciones S.A.P.I. de C.V.
+* This document is the property of LASECÂ®ï¸� Telecomunicaciones S.A.P.I. de C.V.
 * It is considered confidential and proprietary.
 *
 * This document may not be reproduced or transmitted in any form,
 * in whole or in part, without the express written permission of
-* LASEC®️ Telecomunicaciones S.A.P.I. de C.V.
+* LASECÂ®ï¸� Telecomunicaciones S.A.P.I. de C.V.
 *
 *********************************************************************************/
 
@@ -60,8 +60,19 @@ typedef struct
     char            DCT8;
     char            DCT9;
     uint8_t         TxPower;
-
-
+    char       passenger1[19];
+    char       passenger2[19];
+    char       passenger3[19];
+    char       passenger4[19];
+    uint8_t    caso1[4];
+    char       start1[12];
+    char       start2[12];
+    char       start3[12];
+    char       start4[12];
+    char       date1[12];
+    char       date2[12];
+    char       date3[12];
+    char       date4[12];
 
 } dct_read_write_app_dct_t;
 
