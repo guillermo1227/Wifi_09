@@ -159,6 +159,7 @@ void SEND_OTA(unsigned char* buffer_in ){
  *
  * */
 void main_uart(wiced_thread_arg_t arg){
+    printf("\n Listo para recibir ********************************** \n");
         char str;
         while(1){
 //            WPRINT_APP_INFO( ("mutex \n") );

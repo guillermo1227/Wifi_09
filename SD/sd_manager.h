@@ -424,7 +424,7 @@ int file_verify( char* dir_to_file_create,wiced_filesystem_t* fs_handle, const c
 
     if(flag_create==WICED_TRUE){
         create_file(dir_to_file_create,g_date,fs_handle);
-        return NO_FILE;
+        //return NO_FILE;
 
     }
 
@@ -483,7 +483,7 @@ int dir_verify( char* dir_to_file_create,wiced_filesystem_t* fs_handle, const ch
         wiced_filesystem_dir_create(fs_handle,date);
 
 //        create_file(dir_to_file_create,g_date,fs_handle);
-        return NO_FILE;
+        //return NO_FILE;
 
     }
 

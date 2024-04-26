@@ -193,7 +193,7 @@ void passenger1(char *input){
         passenger[number_p - 1].save_in_sd = out_sd;                                                       /* Its no save in sd, do not keep, because i only need ones to save in the nvram */
 
         cass = passenger[number_p - 1].caso;
-        save_nvram_passenger(mac_to_save, number_p,start, date,cass);  /* Save the information in nvram */
+        //save_nvram_passenger(mac_to_save, number_p,start, date,cass);  /* Save the information in nvram */
     }
     if(strstr(t_pass,_Passenger_out)||
            strstr(t_pass,_Passenger_out))
@@ -243,13 +243,13 @@ void passenger1(char *input){
             passenger[number_p - 1].save_in_sd = out_sd;                                                       /* Its no save in sd, do not keep, because i only need ones to save in the nvram */
 
             cass = passenger[number_p - 1].caso;
-            save_nvram_passenger(mac_to_save, number_p,start, date,cass);  /* Save the information in nvram */
+            //save_nvram_passenger(mac_to_save, number_p,start, date,cass);  /* Save the information in nvram */
         }
-    else if(strstr(t_pass,_delete_all))
-    {
-        printf("\n Delete all NVRAM \n");
-        delete_all_passenger();
-    }
+//    else if(strstr(t_pass,_delete_all))
+//    {
+//        printf("\n Delete all NVRAM \n");
+//        delete_all_passenger();
+//    }
     memset(t_pass,NULL,3);
 }
 

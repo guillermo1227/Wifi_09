@@ -1,13 +1,13 @@
 /**********************************************************************************
-* Copyright (C) 2018-2022 LASEC®️ Telecomunicaciones S.A.P.I. de C.V.
+* Copyright (C) 2018-2022 LASECÂ®ï¸� Telecomunicaciones S.A.P.I. de C.V.
 * All rights reserved.
 *
-* This document is the property of LASEC®️ Telecomunicaciones S.A.P.I. de C.V.
+* This document is the property of LASECÂ®ï¸� Telecomunicaciones S.A.P.I. de C.V.
 * It is considered confidential and proprietary.
 *
 * This document may not be reproduced or transmitted in any form,
 * in whole or in part, without the express written permission of
-* LASEC®️ Telecomunicaciones S.A.P.I. de C.V.
+* LASECÂ®ï¸� Telecomunicaciones S.A.P.I. de C.V.
 *
 *********************************************************************************/
 
@@ -79,9 +79,9 @@ static wiced_result_t Set_SSID(uint8_t *data,uint8_t len,wiced_uart_t uart){
 
           if(res == WICED_SUCCESS){
               wiced_uart_transmit_bytes( uart,mensage, strlen(mensage));
-            wiced_uart_transmit_bytes( uart, ("\r\n"),2);
-              return WICED_SUCCESS;
-            }
+              wiced_uart_transmit_bytes( uart, ("\r\n"),2);
+              //return WICED_SUCCESS;
+          }
 
           wiced_dct_read_unlock(wifi_config, WICED_TRUE);
 
@@ -112,7 +112,7 @@ static wiced_result_t Set_KEY(char *data,uint8_t len,wiced_uart_t uart){
        if(res == WICED_SUCCESS){
            wiced_uart_transmit_bytes( uart,mensage, strlen(mensage));
          wiced_uart_transmit_bytes( uart, ("\r\n"),2);
-           return WICED_SUCCESS;
+           //return WICED_SUCCESS;
          }
        wiced_dct_read_unlock(wifi_config, WICED_TRUE);
 
@@ -138,7 +138,7 @@ static wiced_result_t Set_MASK(uint8_t *data,uint8_t len,wiced_uart_t uart){
         if(res == WICED_SUCCESS){
             wiced_uart_transmit_bytes( uart,mensage, strlen(mensage));
           wiced_uart_transmit_bytes( uart, ("\r\n"),2);
-            return WICED_SUCCESS;
+            //return WICED_SUCCESS;
           }
         wiced_dct_read_unlock( app_dct, WICED_FALSE);
 
@@ -165,7 +165,7 @@ static wiced_result_t Set_IP(uint8_t *data,uint8_t len,wiced_uart_t uart){
            if(res == WICED_SUCCESS){
                wiced_uart_transmit_bytes( uart,mensage, strlen(mensage));
                wiced_uart_transmit_bytes( uart, ("\r\n"),2);
-               return WICED_SUCCESS;
+               //return WICED_SUCCESS;
              }
 
            /* release the read lock */
@@ -193,8 +193,8 @@ static wiced_result_t Set_SERVER(uint8_t *data,uint8_t len,wiced_uart_t uart){
            sprintf(mensage,"W_SERVER: %s",str_r);
            if(res == WICED_SUCCESS){
                wiced_uart_transmit_bytes( uart,mensage, strlen(mensage));
-             wiced_uart_transmit_bytes( uart, ("\r\n"),2);
-               return WICED_SUCCESS;
+               wiced_uart_transmit_bytes( uart, ("\r\n"),2);
+               //return WICED_SUCCESS;
              }
            /* release the read lock */
            wiced_dct_read_unlock( app_dct, WICED_FALSE);
@@ -231,7 +231,9 @@ static wiced_result_t Set_GATEWAY(uint8_t *data,uint8_t len,wiced_uart_t uart){
 uint8_t is_config(){
     dct_read_write_app_dct_t* dct_app = NULL;
     uint8_t value;
-    if ( wiced_dct_read_lock( (void**) &dct_app, WICED_FALSE, DCT_APP_SECTION, 0, sizeof( *dct_app ) ) != WICED_SUCCESS )
+//    if ( wiced_dct_read_lock( (void**) &dct_app, WICED_FALSE, DCT_APP_SECTION, 0, sizeof( *dct_app ) ) != WICED_SUCCESS )
+//    {
+    if ( wiced_dct_read_lock( (void**) &dct_app, WICED_TRUE, DCT_APP_SECTION, 0, sizeof( *dct_app ) ) != WICED_SUCCESS )
     {
         return WICED_ERROR;
     }

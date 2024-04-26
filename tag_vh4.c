@@ -14,7 +14,6 @@
  * comento un if en tv_send_1
  * Codigo en el que se envia las macs de las lampras en un for, si hay algun dato la manda
  * codigo despues del sensillo */
-/* Codigo de solo un timer antes de ponerle el hilo en lugar del timer */
 
 #include "wiced.h"
 #include "string.h"
@@ -123,10 +122,10 @@ void application_start( ){
 
 //    wwd_wifi_set_mcs_rate (WICED_STA_INTERFACE, 0, WICED_TRUE);
 
-    if(get_gpio_menssage(10) == 1)
-        {
-            chec_passenger_save();
-        }
+//    if(get_gpio_menssage(10) == 1)
+//        {
+//            chec_passenger_save();
+//        }
 
     init_rtc(&i2c_rtc);
     uart_int();
@@ -233,10 +232,12 @@ void application_start( ){
         //Set_KEY("-KE$#c65&MiK7&uwxc12",22,WICED_UART_3);
         //Set_SERVER("-I172.16.10.40",18,WICED_UART_3);    //10.174.110.100
         /* Inventada */
-        Set_SSID("-S87377-0185",15,WICED_UART_3);
-        Set_KEY("-KE$#c65&MiK7&uwxc12",22,WICED_UART_3);
-        Set_SERVER("-I172.16.10.40",18,WICED_UART_3);    //10.174.110.100
-        Set_config();
+//        Set_SSID("-S87377-0185",15,WICED_UART_3);
+//        Set_KEY("-KE$#c65&MiK7&uwxc12",22,WICED_UART_3);
+//        Set_SERVER("-I172.16.10.40",18,WICED_UART_3);    //10.174.110.100
+
+        //Set_config();
+        //printf("\n El valor retornado es :%d\n",val);
 
 //            silent=WICED_TRUE;
     sent_file_flag=WICED_TRUE;
@@ -249,35 +250,18 @@ void application_start( ){
 
 
 
-
-    switch (is_config()) {
+    switch (main_c) {
               case 0:
                   set_name();
-                  set_name();
-                  net_config();
-   //               Set_SSID("-SSF-DEMO",13,WICED_UART_3);
-   //               Set_KEY("-KD3_lasec2020.,",17,WICED_UART_3);
-   //               Set_SERVER("-I10.174.109.33",17,WICED_UART_3);
-   //               Set_MASK("-M255.255.248.0",15,WICED_UART_3);
-   //               Set_IP("-C10.174.109.60",16,WICED_UART_3);
-   //               Set_GATEWAY("-G10.174.107.30",16,WICED_UART_3);
-   //               net_config();
-   //               Set_SSID("-SSF-DEMO",13,WICED_UART_3);
-   //               Set_KEY("-KD3_lasec2020.,",17,WICED_UART_3);
-   //               Set_SERVER("-I10.174.107.50",17,WICED_UART_3);
-   //               Set_MASK("-M255.255.248.0",15,WICED_UART_3);
-   //               Set_IP("-C10.174.109.51",16,WICED_UART_3);
-   //               Set_GATEWAY("-G10.174.107.30",16,WICED_UART_3);
-   //               Set_config();
-//                  Set_SSID("-SSF-TRACKING",20,WICED_UART_3);
-//                   Set_KEY("-KP4LM4R3J0.@",20,WICED_UART_3);
-//                   Set_SERVER("-I172.16.240.2",17,WICED_UART_3);
-//                   Set_MASK("-M255.255.248.0",15,WICED_UART_3);
-//                   Set_GATEWAY("-G172.16.240.1",16,WICED_UART_3);
-//
-//                   Set_IP("-C172.16.245.35",16,WICED_UART_3);
+                  Set_SSID("-SCSM-MONITOREO",20,WICED_UART_3);
+                  Set_KEY("-KM0n1t0r30#21",20,WICED_UART_3);
+                  Set_SERVER("-I10.90.120.10",17,WICED_UART_3);
 
-//                       Set_config();
+//                  Set_SSID("-S87377-0185",15,WICED_UART_3);
+//                  Set_KEY("-KE$#c65&MiK7&uwxc12",22,WICED_UART_3);
+//                  Set_SERVER("-I172.16.10.40",18,WICED_UART_3);    //10.174.110.100
+                  Set_config();
+                  net_config();
                   break;
               case 3:
                   set_name();

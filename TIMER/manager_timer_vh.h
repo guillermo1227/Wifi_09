@@ -47,6 +47,7 @@ static wiced_timed_event_t Geo_guardian;
 
 static wiced_timed_event_t Collision_guardian;
 static wiced_timed_event_t H_passenger;
+//static wiced_thread_t passengerThreadHandle;
 
 static wiced_result_t guardian_v( void );
 static wiced_result_t guardian_V2( void );
@@ -71,6 +72,7 @@ static wiced_result_t Collision_V( void );
 
 void collision_event_log(wiced_thread_arg_t arg);
 void SearchWifi(wiced_thread_arg_t arg);
+//void passengerthread(wiced_thread_arg_t arg);
 
 void timer_lcd(void* arg);
 //void passenger1(char *input);
@@ -92,7 +94,9 @@ void init_all_timer(){
         wiced_rtos_register_timed_event( &guardian, WICED_NETWORKING_WORKER_THREAD, &guardian_v, 1200, 0 );
         wiced_rtos_register_timed_event( &guardian2, WICED_NETWORKING_WORKER_THREAD, &guardian_V2, 1000, 0 );
         wiced_rtos_register_timed_event( &Geo_guardian, WICED_NETWORKING_WORKER_THREAD, &Beacon_V, 2100, 0 );
-        wiced_rtos_register_timed_event( &H_passenger, WICED_NETWORKING_WORKER_THREAD, &T_passenger, 4500, 0 );
+        wiced_rtos_register_timed_event( &H_passenger, WICED_NETWORKING_WORKER_THREAD, &T_passenger, 2800, 0 );
+
+        //wiced_rtos_create_thread(&passengerThreadHandle, THREAD_BASE_PRIORITY+4, NULL, passengerthread, THREAD_STACK_SIZE, NULL);
         //wiced_rtos_register_timed_event( &Beacon_guardian, WICED_NETWORKING_WORKER_THREAD, &Acarreo_V, 4500, 0 );
 
 //        wiced_rtos_create_thread(&ThreadHandle_W, THREAD_BASE_PRIORITY+5, "WIFI", SearchWifi, THREAD_STACK_SIZE, NULL);
@@ -103,6 +107,10 @@ void init_all_timer(){
 
 }
 
+//void passengerthread(wiced_thread_arg_t arg)
+//{
+//    printf("\n hola desde mi hilo \n");
+//}
 static wiced_result_t T_passenger( void )
 {
     if(send_passanger_sd == 0)
