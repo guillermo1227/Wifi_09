@@ -162,17 +162,17 @@ void passenger1(char *input){
             case 0:
                 /* No hago nada */
                 break;
-            case 1:
+            case 1: /* Numero de pasajero */
                 number_p = atoi(frist_split);
                 passenger[number_p - 1].Pass_number= number_p;
                 printf("\n Paasenger number %d \n",passenger[number_p - 1].Pass_number);
                 break;
-            case 2:
+            case 2: /* Mac del pasajero */
                 memcpy(passenger[number_p - 1].mac_bt,frist_split,strlen(frist_split));
                 printf("\n mac: %s \n",passenger[number_p - 1].mac_bt);
                 memcpy(mac_to_save,frist_split,strlen(frist_split));
                 break;
-            case 3:
+            case 3: /* Caso de entrada = 1 o salida = 2 */
                 caso = atoi(frist_split);
                 passenger[number_p - 1].caso = caso;
                 printf("\n El caso es:%d\n",caso);
@@ -192,8 +192,8 @@ void passenger1(char *input){
 
         passenger[number_p - 1].save_in_sd = out_sd;                                                       /* Its no save in sd, do not keep, because i only need ones to save in the nvram */
 
-        cass = passenger[number_p - 1].caso;
-        //save_nvram_passenger(mac_to_save, number_p,start, date,cass);  /* Save the information in nvram */
+        //cass = passenger[number_p - 1].caso;      /* Estaba descomentado pero no uso, asque comento */
+        save_nvram_passenger(mac_to_save, number_p,start, date,cass);  /* Save the information in nvram */
     }
     if(strstr(t_pass,_Passenger_out)||
            strstr(t_pass,_Passenger_out))
@@ -242,14 +242,9 @@ void passenger1(char *input){
 
             passenger[number_p - 1].save_in_sd = out_sd;                                                       /* Its no save in sd, do not keep, because i only need ones to save in the nvram */
 
-            cass = passenger[number_p - 1].caso;
+            //cass = passenger[number_p - 1].caso;        /* Estaba descomentado pero no uso, asque comento */
             //save_nvram_passenger(mac_to_save, number_p,start, date,cass);  /* Save the information in nvram */
         }
-//    else if(strstr(t_pass,_delete_all))
-//    {
-//        printf("\n Delete all NVRAM \n");
-//        delete_all_passenger();
-//    }
     memset(t_pass,NULL,3);
 }
 

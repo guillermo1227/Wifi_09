@@ -253,14 +253,14 @@ void application_start( ){
     switch (main_c) {
               case 0:
                   set_name();
+//                  Set_SSID("-SCSM-MONITOREO",20,WICED_UART_3);
+//                  Set_KEY("-KM0n1t0r30#21",20,WICED_UART_3);
+//                  Set_SERVER("-I10.90.120.10",17,WICED_UART_3);
                   Set_SSID("-SCSM-MONITOREO",20,WICED_UART_3);
                   Set_KEY("-KM0n1t0r30#21",20,WICED_UART_3);
                   Set_SERVER("-I10.90.120.10",17,WICED_UART_3);
-
-//                  Set_SSID("-S87377-0185",15,WICED_UART_3);
-//                  Set_KEY("-KE$#c65&MiK7&uwxc12",22,WICED_UART_3);
-//                  Set_SERVER("-I172.16.10.40",18,WICED_UART_3);    //10.174.110.100
                   Set_config();
+
                   net_config();
                   break;
               case 3:

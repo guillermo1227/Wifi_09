@@ -159,7 +159,6 @@ void SEND_OTA(unsigned char* buffer_in ){
  *
  * */
 void main_uart(wiced_thread_arg_t arg){
-    printf("\n Listo para recibir ********************************** \n");
         char str;
         while(1){
 //            WPRINT_APP_INFO( ("mutex \n") );
@@ -183,7 +182,7 @@ void main_uart(wiced_thread_arg_t arg){
                     sprintf(uart3,"%s\n",rx_buffer3);
 //                    wiced_uart_transmit_bytes( WICED_UART_1, uart3, strlen(uart3));
 
-                    passenger1(rx_buffer3);
+                    passenger1(rx_buffer3);     /* Datos del pasajero  */
 
                     lcd_data_update(rx_buffer3,&count_v,&count_l,&proximity);
                     lcd_fallen_update(rx_buffer3,&lcd_fallen);      //Aqui si llega BNM y BEAC ---> _B_transit=WICED_TRUE; si fal==1 ---> fallen_f=WICED_TRUE;

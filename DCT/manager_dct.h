@@ -531,43 +531,43 @@ void get_mac_bt (){
 
 }
 
-void save_nvram_passenger(char *mac,int a, char *start, char *date, uint8_t cass)
-{
-    printf("\n Mac a guardar %s Posicion %d \n",mac,a);
-    dct_read_write_app_dct_t*       app_dct                  = NULL;
-
-        /* get the App config section for modifying, any memory allocation required would be done inside wiced_dct_read_lock() */
-        wiced_dct_read_lock( (void**) &app_dct, WICED_TRUE, DCT_APP_SECTION, 0, sizeof( *app_dct ) );
-        switch(a)
-        {
-        case 1:
-            memcpy(app_dct->passenger1, mac,strlen(mac));   /* Mac */
-            app_dct->caso1[0] = cass;                       /* Caso de IN / OUT */
-            memcpy(app_dct->start1,start, strlen(start));
-            memcpy(app_dct->date1,date, strlen(date));
-            break;
-        case 2:
-            memcpy(app_dct->passenger2, mac,strlen(mac));
-            app_dct->caso1[1] = cass;
-            memcpy(app_dct->start2,start, strlen(start));
-            memcpy(app_dct->date2,date, strlen(date));
-            break;
-        case 3:
-            memcpy(app_dct->passenger3, mac,strlen(mac));
-            app_dct->caso1[2] = cass;
-            memcpy(app_dct->start3,start, strlen(start));
-            memcpy(app_dct->date3,date, strlen(date));
-            break;
-        case 4:
-            memcpy(app_dct->passenger4, mac,strlen(mac));
-            app_dct->caso1[3] = cass;
-            memcpy(app_dct->start4,start, strlen(start));
-            memcpy(app_dct->date4,date, strlen(date));
-            break;
-        }
-        app_dct->DCT4 = 1;  /* Something is inside of the passenger */
-        wiced_dct_write( (const void*) app_dct, DCT_APP_SECTION, 0, sizeof(dct_read_write_app_dct_t) );
-}
+//void save_nvram_passenger(char *mac,int a, char *start, char *date, uint8_t cass)
+//{
+//    printf("\n Mac a guardar %s Posicion %d \n",mac,a);
+//    dct_read_write_app_dct_t*       app_dct                  = NULL;
+//
+//        /* get the App config section for modifying, any memory allocation required would be done inside wiced_dct_read_lock() */
+//        wiced_dct_read_lock( (void**) &app_dct, WICED_TRUE, DCT_APP_SECTION, 0, sizeof( *app_dct ) );
+//        switch(a)
+//        {
+//        case 1:
+//            memcpy(app_dct->passenger1, mac,strlen(mac));   /* Mac */
+//            app_dct->caso1[0] = cass;                       /* Caso de IN / OUT */
+//            memcpy(app_dct->start1,start, strlen(start));
+//            memcpy(app_dct->date1,date, strlen(date));
+//            break;
+//        case 2:
+//            memcpy(app_dct->passenger2, mac,strlen(mac));
+//            app_dct->caso1[1] = cass;
+//            memcpy(app_dct->start2,start, strlen(start));
+//            memcpy(app_dct->date2,date, strlen(date));
+//            break;
+//        case 3:
+//            memcpy(app_dct->passenger3, mac,strlen(mac));
+//            app_dct->caso1[2] = cass;
+//            memcpy(app_dct->start3,start, strlen(start));
+//            memcpy(app_dct->date3,date, strlen(date));
+//            break;
+//        case 4:
+//            memcpy(app_dct->passenger4, mac,strlen(mac));
+//            app_dct->caso1[3] = cass;
+//            memcpy(app_dct->start4,start, strlen(start));
+//            memcpy(app_dct->date4,date, strlen(date));
+//            break;
+//        }
+//        app_dct->DCT4 = 1;  /* Something is inside of the passenger */
+//        wiced_dct_write( (const void*) app_dct, DCT_APP_SECTION, 0, sizeof(dct_read_write_app_dct_t) );
+//}
 
 chec_passenger_save()
 {
