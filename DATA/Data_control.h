@@ -32,8 +32,14 @@ wiced_bool_t fallen_f =WICED_FALSE;
 wiced_bool_t risk_z=WICED_FALSE;
 wiced_bool_t _flag_aca=WICED_FALSE;
 wiced_bool_t _flag_driver = WICED_FALSE; /* Variable used to indicate the sound of driver */
+wiced_bool_t _wifi_status=WICED_FALSE;   /* Variable used to indicate the state of wifi */
+wiced_bool_t _flag_D_in = WICED_FALSE;
+//wiced_bool_t _machine_flag=WICED_FALSE;
+//wiced_bool_t _machine_flag2=WICED_FALSE;
 unsigned char _lateral_veh[2];
 unsigned char _lateral_lam[2];
+unsigned char _HVT_Text[150];
+unsigned char _HE_Text[50];
 
 //void save_nvram_passenger(struct Passenger *passenger);
 extern void save_nvram_passenger(char *mac,int a, char *start, char *date, uint8_t cass);
@@ -106,6 +112,8 @@ struct tempo_collision{
 #define _Passenger_in   "PCM"
 #define _Passenger_out  "PCO"
 #define _delete_all     "DEL"
+#define _N_KDV      "KDV"
+#define _NONE       "NONE"
 
 static char _split_tama_1[] ="#";
 static char _split_tama_2 []="|";
@@ -136,13 +144,14 @@ struct Passenger
     unsigned char date[12];
     uint8_t caso;
     uint8_t save_in_sd;
+    uint8_t go_out;
 };
 
+//uint8_t cass;
 struct Passenger passenger[4];
 struct aux_pass aux_pas2;
 unsigned char mac_to_save[19], start[12], date[12];
-uint8_t cass;
-char t_pass[3];
+char t_pass[3], mac_bt_D[20];
 void passenger1(char *input){
     memcpy(t_pass,input,3);
     if(strstr(t_pass,_Passenger_in) ||
@@ -164,17 +173,17 @@ void passenger1(char *input){
                 break;
             case 1: /* Numero de pasajero */
                 number_p = atoi(frist_split);
-                passenger[number_p - 1].Pass_number= number_p;
-                printf("\n Paasenger number %d \n",passenger[number_p - 1].Pass_number);
+                passenger[number_p - 2].Pass_number= number_p;
+                printf("\n Paasenger number %d \n",passenger[number_p - 2].Pass_number);
                 break;
             case 2: /* Mac del pasajero */
-                memcpy(passenger[number_p - 1].mac_bt,frist_split,strlen(frist_split));
-                printf("\n mac: %s \n",passenger[number_p - 1].mac_bt);
+                memcpy(passenger[number_p - 2].mac_bt,frist_split,strlen(frist_split));
+                printf("\n mac: %s \n",passenger[number_p - 2].mac_bt);
                 memcpy(mac_to_save,frist_split,strlen(frist_split));
                 break;
             case 3: /* Caso de entrada = 1 o salida = 2 */
                 caso = atoi(frist_split);
-                passenger[number_p - 1].caso = caso;
+                passenger[number_p - 2].caso = caso;
                 printf("\n El caso es:%d\n",caso);
                 break;
             default:
@@ -184,16 +193,15 @@ void passenger1(char *input){
             frist_split=strtok(NULL,_split_tama_2);
         }
         /* Tomo la hora de llegada/salida del pasajero y mac y el numero de pasajero */
-        strcpy(passenger[number_p - 1].time_start,time_get(&i2c_rtc));
-        memcpy(start,passenger[number_p - 1].time_start, strlen(passenger[number_p - 1].time_start));
+        strcpy(passenger[number_p - 2].time_start,time_get(&i2c_rtc));
+        //memcpy(start,passenger[number_p - 1].time_start, strlen(passenger[number_p - 1].time_start));
 
-        strcpy(passenger[number_p - 1].date,date_get_log(&i2c_rtc));
-        memcpy(date,passenger[number_p - 1].date, strlen(passenger[number_p - 1].date));
+        strcpy(passenger[number_p - 2].date,date_get_log(&i2c_rtc));
+        //memcpy(date,passenger[number_p - 1].date, strlen(passenger[number_p - 1].date));
 
-        passenger[number_p - 1].save_in_sd = out_sd;                                                       /* Its no save in sd, do not keep, because i only need ones to save in the nvram */
-
-        //cass = passenger[number_p - 1].caso;      /* Estaba descomentado pero no uso, asque comento */
-        save_nvram_passenger(mac_to_save, number_p,start, date,cass);  /* Save the information in nvram */
+        passenger[number_p - 2].save_in_sd = out_sd;                                                       /* Its no save in sd, do not keep, because i only need ones to save in the nvram */
+        //cass = passenger[number_p - 1].caso;      /* Usado en e guardadomen la NVRAM */
+        //save_nvram_passenger(mac_to_save, number_p,start, date,cass);  /* Save the information in nvram */
     }
     if(strstr(t_pass,_Passenger_out)||
            strstr(t_pass,_Passenger_out))
@@ -212,19 +220,19 @@ void passenger1(char *input){
                 case 0:
                     /* No hago nada */
                     break;
-                case 1:
+                case 1:                                                /* Numero de pasajero */
                     number_p = atoi(frist_split);
-                    passenger[number_p - 1].Pass_number= number_p;
-                    printf("\n Paasenger number %d \n",passenger[number_p - 1].Pass_number);
+                    passenger[number_p - 2].Pass_number= number_p;
+                    printf("\n Paasenger number %d \n",passenger[number_p - 2].Pass_number);
                     break;
-                case 2:
-                    memcpy(passenger[number_p - 1].mac_bt,frist_split,strlen(frist_split));
-                    printf("\n mac: %s \n",passenger[number_p - 1].mac_bt);
+                case 2:                                               /* */
+                    memcpy(passenger[number_p - 2].mac_bt,frist_split,strlen(frist_split));
+                    printf("\n mac: %s \n",passenger[number_p - 2].mac_bt);
                     memcpy(mac_to_save,frist_split,strlen(frist_split));
                     break;
                 case 3:
                     caso = atoi(frist_split);
-                    passenger[number_p - 1].caso = caso;
+                    passenger[number_p - 2].caso = caso;
                     printf("\n El caso es:%d\n",caso);
                     break;
                 default:
@@ -234,17 +242,55 @@ void passenger1(char *input){
                 frist_split=strtok(NULL,_split_tama_2);
             }
             /* Tomo la hora de llegada/salida del pasajero y mac y el numero de pasajero */
-            strcpy(passenger[number_p - 1].time_start,time_get(&i2c_rtc));
-            memcpy(start,passenger[number_p - 1].time_start, strlen(passenger[number_p - 1].time_start));
+            strcpy(passenger[number_p - 2].time_start,time_get(&i2c_rtc));
+            //memcpy(start,passenger[number_p - 1].time_start, strlen(passenger[number_p - 1].time_start));
 
-            strcpy(passenger[number_p - 1].date,date_get_log(&i2c_rtc));
-            memcpy(date,passenger[number_p - 1].date, strlen(passenger[number_p - 1].date));
+            strcpy(passenger[number_p - 2].date,date_get_log(&i2c_rtc));
+            //memcpy(date,passenger[number_p - 1].date, strlen(passenger[number_p - 1].date));
 
-            passenger[number_p - 1].save_in_sd = out_sd;                                                       /* Its no save in sd, do not keep, because i only need ones to save in the nvram */
+            passenger[number_p - 2].save_in_sd = out_sd;                                                       /* Its no save in sd, do not keep, because i only need ones to save in the nvram */
 
             //cass = passenger[number_p - 1].caso;        /* Estaba descomentado pero no uso, asque comento */
             //save_nvram_passenger(mac_to_save, number_p,start, date,cass);  /* Save the information in nvram */
         }
+    else if(strstr(t_pass,_N_KDV))
+    {
+        int x=0;
+        unsigned char str_split[128];
+        memcpy(str_split,input,strlen(input));
+        char * first_split;
+        first_split=strtok(str_split,_split_tama_2);
+
+        while(first_split !=NULL)
+        {
+            switch(x)
+            {
+            case 0:
+                /* No hago nada */
+                break;
+            case 1:
+                if(strstr(first_split ,_NONE) && (_flag_D_in = WICED_TRUE))
+                {
+                    memset(mac_bt_D,'\0',strlen(mac_bt_D));
+                    _flag_D_in = WICED_FALSE;
+                    _flag_driver = WICED_TRUE;   /* Activar el sonido */
+                }
+                else if(_flag_D_in == WICED_FALSE)
+                {       /* Entra 9C:50:D1:22:34:55 */
+                    memset(mac_bt_D,'\0',strlen(mac_bt_D));
+                    memcpy(mac_bt_D, first_split,strlen(first_split));
+                    //mac_bt_D[strlen(first_split)]='\0';
+                    _flag_D_in = WICED_TRUE;            /* Bandera para que solo entre una vez */
+                    _flag_driver = WICED_TRUE;          /* Activar el sonido */
+                }
+                break;
+            default:
+                break;
+            }
+            first_split = strtok(NULL,_split_tama_2);
+            x++;
+        }
+    }
     memset(t_pass,NULL,3);
 }
 
@@ -419,16 +465,18 @@ char* data_to_json(struct location_data *data  ){
     return res;
 }
 
-char* data_to_json_passenger(struct aux_pass *aux_p,char *s_Mac_W){
+char* data_to_json_passenger(struct aux_pass *aux_p,char *s_Mac_W, char *mac_wifi, char *mac_ap){
     char* res1;
     res1=malloc(sizeof(char)*200);
     if(aux_p->caso == 1)
     {
-        sprintf(res1,"{\"Passenger 1 N\":\"%d\",\"Mac\":\"%s\",Vehicule\":\"%s\",\"EnterTime\":\"%s-%s\"}\n",aux_p->Pass_number,aux_p->mac_bt,s_Mac_W,aux_p->date,aux_p->time_start);
+        sprintf(res1,"{\"Vehicle\":\"%s\",\"AP\":\"%s\",\"Passenger\":\"%s\",\"Status\":\"%d\",\"Time\":\"%s-%s\"}\n",mac_wifi,mac_ap,aux_p->mac_bt,1,aux_p->date,aux_p->time_start);
+    //sprintf(res1,"{\"Vehicle\":\"%s\",\"AP\":\"%s\",\"Passenger\":\"%s\",Vehicule\":\"%s\",\"EnterTime\":\"%s-%s\"}\n",mac_wifi,mac_ap,aux_p->mac_bt,s_Mac_W,aux_p->date,aux_p->time_start);
     }
     else
     {
-        sprintf(res1,"{\"Passenger 0 N\":\"%d\",\"Mac\":\"%s\",Vehicule\":\"%s\",\"OutTime\":\"%s-%s\"}\n",aux_p->Pass_number,aux_p->mac_bt,s_Mac_W,aux_p->date,aux_p->time_start);
+        sprintf(res1,"{\"Vehicle\":\"%s\",\"AP\":\"%s\",\"Passenger\":\"%s\",\"Status\":\"%d\",\"Time\":\"%s-%s\"}\n",mac_wifi,mac_ap,aux_p->mac_bt,0,aux_p->date,aux_p->time_start);
+        //sprintf(res1,"{\"Vehicle\":\"%s\",\"AP\":\"%s\",\"Passenger 0 N\":\"%d\",\"Mac\":\"%s\",Vehicule\":\"%s\",\"OutTime\":\"%s-%s\"}\n",mac_wifi,mac_ap,aux_p->Pass_number,aux_p->mac_bt,s_Mac_W,aux_p->date,aux_p->time_start);
     }
     return res1;
 }

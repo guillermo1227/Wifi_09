@@ -264,29 +264,29 @@ void write_data(char* TGT_DIR,const char* filename,struct location_data dataX,wi
 
 void write_passenger(char* TGT_DIR, const char* filename, struct aux_pass *aux_p,wiced_filesystem_t* fs_handle, char *s_Mac_W)
 {
-    wiced_dir_t dir;
-    wiced_file_t f_src;
-    uint64_t write_count = 1;
-    char g_date[15];
-
-    sprintf(g_date,"%s.txt",filename);
-
-    wiced_filesystem_dir_open( fs_handle, &dir, TGT_DIR );
-    if(WICED_SUCCESS != wiced_filesystem_file_open( fs_handle, &f_src, g_date, WICED_FILESYSTEM_OPEN_FOR_WRITE))
-    {
-        printf( "Error opening target file %s\n",g_date);
-    }
-    else
-    {
-        printf("\n Texto %s, numero de byts a escribir %d \n",data_to_json_passenger(aux_p,s_Mac_W),strlen(data_to_json_passenger(aux_p,s_Mac_W)));
-        if(WICED_SUCCESS == wiced_filesystem_file_write( &f_src, (const char *)data_to_json_passenger(aux_p,s_Mac_W),strlen(data_to_json_passenger(aux_p,s_Mac_W)), &write_count ))
-        {
-            printf("\n Text insert succesful \n");
-        }
-        //free(res1);
-    }
-    wiced_filesystem_file_close( &f_src );
-    wiced_filesystem_dir_close(&dir);
+//    wiced_dir_t dir;
+//    wiced_file_t f_src;
+//    uint64_t write_count = 1;
+//    char g_date[15];
+//
+//    sprintf(g_date,"%s.txt",filename);
+//
+//    wiced_filesystem_dir_open( fs_handle, &dir, TGT_DIR );
+//    if(WICED_SUCCESS != wiced_filesystem_file_open( fs_handle, &f_src, g_date, WICED_FILESYSTEM_OPEN_FOR_WRITE))
+//    {
+//        printf( "Error opening target file %s\n",g_date);
+//    }
+//    else
+//    {
+//        printf("\n Texto %s, numero de byts a escribir %d \n",data_to_json_passenger(aux_p,s_Mac_W),strlen(data_to_json_passenger(aux_p,s_Mac_W)));
+//        if(WICED_SUCCESS == wiced_filesystem_file_write( &f_src, (const char *)data_to_json_passenger(aux_p,s_Mac_W),strlen(data_to_json_passenger(aux_p,s_Mac_W)), &write_count ))
+//        {
+//            printf("\n Text insert succesful \n");
+//        }
+//        //free(res1);
+//    }
+//    wiced_filesystem_file_close( &f_src );
+//    wiced_filesystem_dir_close(&dir);
 }
 
 void write_data_acarreo(char* TGT_DIR,const char* filename,struct Acarreos *dataX,char * Vehi_Rep,wiced_filesystem_t* fs_handle){

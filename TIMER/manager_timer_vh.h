@@ -94,7 +94,7 @@ void init_all_timer(){
         wiced_rtos_register_timed_event( &guardian, WICED_NETWORKING_WORKER_THREAD, &guardian_v, 1200, 0 );
         wiced_rtos_register_timed_event( &guardian2, WICED_NETWORKING_WORKER_THREAD, &guardian_V2, 1000, 0 );
         wiced_rtos_register_timed_event( &Geo_guardian, WICED_NETWORKING_WORKER_THREAD, &Beacon_V, 2100, 0 );
-        wiced_rtos_register_timed_event( &H_passenger, WICED_NETWORKING_WORKER_THREAD, &T_passenger, 2800, 0 );
+        wiced_rtos_register_timed_event( &H_passenger, WICED_NETWORKING_WORKER_THREAD, &T_passenger, 4500, 0 ); /* 2800 */
 
         //wiced_rtos_create_thread(&passengerThreadHandle, THREAD_BASE_PRIORITY+4, NULL, passengerthread, THREAD_STACK_SIZE, NULL);
         //wiced_rtos_register_timed_event( &Beacon_guardian, WICED_NETWORKING_WORKER_THREAD, &Acarreo_V, 4500, 0 );
@@ -113,27 +113,27 @@ void init_all_timer(){
 //}
 static wiced_result_t T_passenger( void )
 {
-    if(send_passanger_sd == 0)
-    {
-        for(uint8_t i=0;i<4;i++)
-        {
-            if(passenger[i].save_in_sd == out_sd)
-            {
-                printf(" Inside timer save something ----> ");
-                memcpy(aux_p.mac_bt,passenger[i].mac_bt,strlen(passenger[i].mac_bt));                /* mac */
-                memcpy(aux_p.date,passenger[i].date,strlen(passenger[i].date));                      /* fecha */
-                memcpy(aux_p.time_start,passenger[i].time_start,strlen(passenger[i].time_start));    /* time */
-                aux_p.Pass_number=passenger[i].Pass_number;                                          /* Numero de pasajero */
-                aux_p.caso=passenger[i].caso;                                                        /* Caso, in/out */
-
-                printf("\n ------> Caso %d\n",aux_p.caso);
-                write_passenger(PASAJEROS_ROOT,date_get(&i2c_rtc),&aux_p,&fs_handle,s_Mac_W);
-                passenger[i].save_in_sd = in_sd;
-            }
-            else if(passenger[i].save_in_sd == in_sd)
-                printf("\n La mac ya esta guardada pero no borro, mantengo para cuado haya conexion %s \n",passenger[i].mac_bt);
-        }
-    }
+//    if(send_passanger_sd == 0)
+//    {
+//        for(uint8_t i=0;i<4;i++)
+//        {
+//            if(passenger[i].save_in_sd == out_sd)
+//            {
+//                printf(" Inside timer save something ----> ");
+//                memcpy(aux_p.mac_bt,passenger[i].mac_bt,strlen(passenger[i].mac_bt));                /* mac */
+//                memcpy(aux_p.date,passenger[i].date,strlen(passenger[i].date));                      /* fecha */
+//                memcpy(aux_p.time_start,passenger[i].time_start,strlen(passenger[i].time_start));    /* time */
+//                aux_p.Pass_number=passenger[i].Pass_number;                                          /* Numero de pasajero */
+//                aux_p.caso=passenger[i].caso;                                                        /* Caso, in/out */
+//
+//                printf("\n ------> Caso %d\n",aux_p.caso);
+//                write_passenger(PASAJEROS_ROOT,date_get(&i2c_rtc),&aux_p,&fs_handle,s_Mac_W);
+//                passenger[i].save_in_sd = in_sd;
+//            }
+//            else if(passenger[i].save_in_sd == in_sd)
+//                printf("\n La mac ya esta guardada pero no borro, mantengo para cuado haya conexion %s \n",passenger[i].mac_bt);
+//        }
+//    }
 
     if((Product_f==WICED_TRUE)&&(GEOSF_F==WICED_TRUE)){
              Product_f=WICED_FALSE;
@@ -364,14 +364,14 @@ static wiced_result_t guardian_V2( void ){
         }
     last_count_l=count_l;
 
-//    if(_flag_driver == WICED_TRUE)
-//            {
-//            printf("\n *** Sound driver *** \n");
-//            buzz(200,2);
-//            _flag_driver = WICED_FALSE;
-//            }
-
+    if(_flag_driver == WICED_TRUE)
+    {
+        printf("\n *** Sound driver *** \n");
+        buzz(200,2);
+        _flag_driver = WICED_FALSE;
     }
+
+}
 
 /*************** Timer to publish weather data every 30sec ***************/
 

@@ -151,7 +151,7 @@ void application_start( ){
     dir_verify("/",&fs_handle,"/",ANTICOLISION);
     dir_verify("/",&fs_handle,"/",SF);
     //dir_verify("/",&fs_handle,"/",ACARREO);
-    dir_verify("/",&fs_handle,"/",PASAJEROS);   /* ------ Pasajeros */
+    //dir_verify("/",&fs_handle,"/",PASAJEROS);   /* ------ Pasajeros */
 
     //file_verify(ACARREO_ROOT,&fs_handle,ACARREO_ROOT,date_get(&i2c_rtc));
     file_verify(ANTICOLISION_ROOT,&fs_handle,ANTICOLISION_ROOT,date_get(&i2c_rtc));
@@ -253,19 +253,20 @@ void application_start( ){
     switch (main_c) {
               case 0:
                   set_name();
+
 //                  Set_SSID("-SCSM-MONITOREO",20,WICED_UART_3);
 //                  Set_KEY("-KM0n1t0r30#21",20,WICED_UART_3);
-//                  Set_SERVER("-I10.90.120.10",17,WICED_UART_3);
-                  Set_SSID("-SCSM-MONITOREO",20,WICED_UART_3);
-                  Set_KEY("-KM0n1t0r30#21",20,WICED_UART_3);
-                  Set_SERVER("-I10.90.120.10",17,WICED_UART_3);
+//                  Set_SERVER("-I172.16.20.6",17,WICED_UART_3);
+
+                  Set_SSID("-Ssmartflow-dev",20,WICED_UART_3);
+                  Set_KEY("-KLasec123.",20,WICED_UART_3);
+                  Set_SERVER("-I10.174.109.8",17,WICED_UART_3);
                   Set_config();
 
                   net_config();
                   break;
               case 3:
                   set_name();
-                  //set_name();
                   init_tcp_w();
                    net_vehicle();
                   break;

@@ -379,7 +379,13 @@ int tcp_gateway( void ){
 
               }
 
-//              memset(sendMessage,NULL,80);
+              sprintf(data_out,"C;{\"Vehicle\":\"%s\",\"AP\":\"%s\",\"Operator\":\"%s\"}\n",&mac_wifi,&mac_ap,&mac_bt_D);
+              result=wiced_tcp_stream_write(&stream, data_out, strlen(data_out));
+              if(result==WICED_TCPIP_SUCCESS){
+                  send_data_task=WICED_TRUE;
+              }
+              printf("%s\n",data_out);
+
               memset(data_out,NULL,1000);
 //              key=1;
         wiced_tcp_stream_flush(&stream);
@@ -390,9 +396,13 @@ int tcp_gateway( void ){
         wiced_tcp_stream_deinit(&stream);
         wiced_tcp_delete_socket(&socket);
 
-
+        count_tcp++;
+        if(count_tcp==TCP_NUMBER){
+            state=4;
+        }
         count_tcp=0;
-        return 4;
+
+        return state;
 }
 
 int tcp_passenger(void)
@@ -401,7 +411,6 @@ int tcp_passenger(void)
     flag_time_set_PUBLISH=WICED_TRUE;
 
         uint8_t state=0;
-
     //    wiced_rtos_lock_mutex(&pubSubMutex);
 
         send_data_task=WICED_TRUE;
@@ -425,10 +434,8 @@ int tcp_passenger(void)
               {
                   try_n=try_n+1;
                   if(try_n==TCP_DOWN_NUMBER){
-      //                   set_name();
                       check_sound_onoff();
                        wiced_rtos_delay_milliseconds(100);
-      //                     set_name();
     //                 wiced_framework_reboot();
                   }
 
@@ -448,17 +455,6 @@ int tcp_passenger(void)
                       check_sound_onoff();
 
                        wiced_rtos_delay_milliseconds(100);
-      //                     set_name();
-      //                 if((strlen(aux_date_y)==8)&&(strlen(aux_time)==8)&&(flag_time_set_PUBLISH==WICED_TRUE)){ // Realizar la condicion correcto o quitarla la condicional
-      //                     flag_time_set=WICED_FALSE;
-      //                     flag_time_set_PUBLISH=WICED_FALSE;
-      //                                 date_set(aux_date_y,&i2c_rtc);
-      //                     wiced_rtos_delay_microseconds(100);
-      //                                 time_set(aux_time,&i2c_rtc);
-      //                     printf("%s,%s\n",aux_date_y,aux_time);
-      //                     wiced_rtos_delay_microseconds(2000);
-      //
-      //                 }
     //                 wiced_framework_reboot();
                   }
 
@@ -480,14 +476,6 @@ int tcp_passenger(void)
       ////                   set_name();
                       check_sound_onoff();
                            wiced_rtos_delay_milliseconds(100);
-      //                     set_name();
-      //            if((strlen(aux_date_y)==8)&&(strlen(aux_time)==8)&&(flag_time_set_PUBLISH==WICED_TRUE)){ // Realizar la condicion correcto o quitarla la condicional
-      //                flag_time_set=WICED_FALSE;
-      //                flag_time_set_PUBLISH=WICED_FALSE;
-      //                            date_set(aux_date_y,&i2c_rtc);
-      //                wiced_rtos_delay_microseconds(100);
-      //                            time_set(aux_time,&i2c_rtc);
-      //                printf("%s,%s\n",aux_date_y,aux_time);
       //                wiced_rtos_delay_microseconds(2000);
       //
       //            }
@@ -528,48 +516,29 @@ int tcp_passenger(void)
               // Initialize the TCP stream
               wiced_tcp_stream_init(&stream, &socket);
 
-              if(try_n <7)
+              for(uint8_t k=0; k<3;k++)
               {
-                  for(uint8_t k=0; k<4;k++)
+                  if(strlen(passenger[k].mac_bt) != 0)
                   {
-                      /* Primero va a leer todo lo que tiene dentro de la memoria sd */
-                      if(send_passanger_sd <= 2)
-                      {
-                          send_passanger_sd++;
-                          coun=read_data(PASAJEROS_ROOT,date_get(&i2c_rtc),&fs_handle);
-                          /* get the first token */
-                          token = strtok(filebuf, s);
-                          /* walk through other tokens */
-                          if(coun!=0){
-                              while( token != NULL ) {
-                                  wiced_rtos_delay_microseconds( 10 );
-                                  sprintf(data_out,"\nG;%s\r\n",token);
-                                  result=wiced_tcp_stream_write(&stream, data_out, strlen(data_out));
+                      memcpy(aux_p.mac_bt,passenger[k].mac_bt,strlen(passenger[k].mac_bt));                /* mac */
+                      memcpy(aux_p.date,passenger[k].date,strlen(passenger[k].date));                      /* fecha */
+                      memcpy(aux_p.time_start,passenger[k].time_start,strlen(passenger[k].time_start));    /* time */
+                      aux_p.Pass_number=passenger[k].Pass_number;                                          /* Numero de pasajero */
+                      aux_p.caso=passenger[k].caso;                                                        /* Caso, in/out */
 
-                                  if(result==WICED_TCPIP_SUCCESS){
-                                      printf( "%s",data_out);
-                                  }
-                                  token = strtok(NULL, s);
-                                  coun--;
-                              }
-                          }
-                          else{
-                              result=wiced_tcp_stream_write(&stream, NO_DATA, strlen(NO_DATA));
-                          }
-                      }
-                      else if(strlen(passenger[k].mac_bt) != 0 && passenger[k].caso == 1)  /* Envia por el socket la trama de entrada sin preguntar en la memori sd */
-                      {
-                          memcpy(aux_p.mac_bt,passenger[k].mac_bt,strlen(passenger[k].mac_bt));                /* mac */
-                          memcpy(aux_p.date,passenger[k].date,strlen(passenger[k].date));                      /* fecha */
-                          memcpy(aux_p.time_start,passenger[k].time_start,strlen(passenger[k].time_start));    /* time */
-                          aux_p.Pass_number=passenger[k].Pass_number;                                          /* Numero de pasajero */
-                          aux_p.caso=passenger[k].caso;                                                        /* Caso, in/out */
-                          sprintf(data_out,"\nG;%s\r\n",data_to_json_passenger(&aux_p,s_Mac_W));
-                          result=wiced_tcp_stream_write(&stream, data_out, strlen(data_out));
-                          printf("%s",data_out);
-                          memset(data_out,NULL,1000);
-                      }
-                      else if(strlen(passenger[k].mac_bt) != 0 && passenger[k].caso == 2) /* Envia por el socket la trama de salida sin preguntar en la memori sd */
+                      sprintf(data_out,"\nP;%s\r\n",data_to_json_passenger(&aux_p,s_Mac_W,mac_wifi,mac_ap));
+                      result=wiced_tcp_stream_write(&stream, data_out, strlen(data_out));
+                      printf("%s",data_out);
+
+                      memset(data_out,NULL,1000);
+                      memset(aux_p.mac_bt,NULL,19);
+                      memset(aux_p.date,NULL,12);
+                      memset(aux_p.time_start,NULL,12);
+                      aux_p.Pass_number = NULL;
+                      aux_p.caso = NULL;
+
+
+                      if(passenger[k].caso == 2)
                       {
                           memcpy(aux_p.mac_bt,passenger[k].mac_bt,strlen(passenger[k].mac_bt));                /* mac */
                           memcpy(aux_p.date,passenger[k].date,strlen(passenger[k].date));                      /* fecha */
@@ -577,42 +546,57 @@ int tcp_passenger(void)
                           aux_p.Pass_number=passenger[k].Pass_number;                                          /* Numero de pasajero */
                           aux_p.caso=passenger[k].caso;                                                        /* Caso, in/out */
 
-                          sprintf(data_out,"\nG;%s\r\n",data_to_json_passenger(&aux_p,s_Mac_W));
+                          sprintf(data_out,"\nP;%s\r\n",data_to_json_passenger(&aux_p,s_Mac_W,mac_wifi,mac_ap));
                           result=wiced_tcp_stream_write(&stream, data_out, strlen(data_out));
+
                           printf("%s",data_out);
+
                           memset(data_out,NULL,1000);
+                          memset(aux_p.mac_bt,NULL,19);
+                          memset(aux_p.date,NULL,12);
+                          memset(aux_p.time_start,NULL,12);
+                          aux_p.Pass_number = NULL;
+                          aux_p.caso = NULL;
+
+                          memset(passenger[k].mac_bt,NULL,19);
+                          memset(passenger[k].date, NULL,12);
+                          memset(passenger[k].time_start, NULL,12);
+                          passenger[k].Pass_number = 0;
                       }
-                      else
-                          result=wiced_tcp_stream_write(&stream, NO_DATA, strlen(NO_DATA));
                   }
               }
-              else
-                  send_passanger_sd = 0;  /* en esta seccion, si en un momeno se perdop conexion a internet lo pone a cero para  */
-                                          /* entrar en el timer de guardado de informacion */
-                  wiced_rtos_set_semaphore(&tcpGatewaySemaphore);
 
-                  memset(filebuf,NULL,LOCAL_BUFFER_SIZE);
+              wiced_rtos_set_semaphore(&tcpGatewaySemaphore);
 
-                  wiced_rtos_get_semaphore(&tcpGatewaySemaphore,WICED_WAIT_FOREVER);
+              memset(filebuf,NULL,LOCAL_BUFFER_SIZE);
+
+              wiced_rtos_get_semaphore(&tcpGatewaySemaphore,WICED_WAIT_FOREVER);
 
     //                }
 
 
-                  sent_file_flag=!sent_file_flag;
+              sent_file_flag=!sent_file_flag;
 
 
-                  wiced_tcp_stream_flush(&stream);
+              wiced_tcp_stream_flush(&stream);
 
 
               // Delete the stream and socket
-                  wiced_tcp_stream_deinit(&stream);
-                  wiced_tcp_delete_socket(&socket);
+              wiced_tcp_stream_deinit(&stream);
+              wiced_tcp_delete_socket(&socket);
 
-                 wiced_rtos_delay_milliseconds( 2000 );
-                 wiced_packet_delete(packet);
-                 wiced_packet_delete(rx_packet);
-                 wiced_tcp_disconnect(&tcp_client_socket);
-    return 2;
+              wiced_rtos_delay_milliseconds( 2000 );
+              wiced_packet_delete(packet);
+              wiced_packet_delete(rx_packet);
+              wiced_tcp_disconnect(&tcp_client_socket);
+
+              count_tcp++;
+              if(count_tcp==TCP_NUMBER){
+                  state=2;
+              }
+              count_tcp=0;
+
+    return state;
 }
 
 int tcp_client_aca( )
